@@ -1,0 +1,1643 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coplan · Design System</title>
+<style>
+  :root{
+    --bg:#F5F7FC; --fg:#0A1A2E; --card:#FFFFFF; --border:#E0E0E1;
+    --primary:#1F4993; --accent:#75C566; --muted:#8A8A8D; --mutedbg:#E6E6E7;
+    --destructive:#EF4444; --radius:12.8px; --sidebar-w:240px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{background:var(--bg);color:var(--fg);font-family:'Exo 2',ui-sans-serif,system-ui,sans-serif;line-height:1.5;display:flex;}
+
+  .shell-right{flex:1;display:flex;flex-direction:column;min-width:0;}
+  .doc-topbar{position:sticky;top:0;z-index:30;background:#fff;border-bottom:1px solid var(--border);padding:12px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;}
+  .doc-search-wrap{position:relative;flex:1;max-width:360px;}
+  .doc-search{border:1px solid var(--border);border-radius:10px;padding:9px 14px;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);cursor:pointer;transition:border-color .15s ease;}
+  .doc-search:hover{border-color:var(--primary);}
+  .doc-search kbd{margin-left:auto;background:var(--mutedbg);border-radius:5px;padding:1px 6px;font-size:10.5px;}
+  .doc-search-panel{display:none;position:absolute;top:0;left:0;width:420px;background:#fff;border-radius:12px;box-shadow:0 12px 32px rgba(10,26,46,.2);z-index:41;overflow:hidden;}
+  .doc-search-panel.open{display:block;}
+  .doc-search-panel input{width:100%;border:none;border-bottom:1px solid var(--border);padding:14px 16px;font-family:inherit;font-size:14px;outline:none;box-sizing:border-box;}
+  .doc-search-panel #docSearchResults{max-height:340px;overflow-y:auto;}
+  .doc-search-result{display:flex;justify-content:space-between;padding:11px 16px;font-size:13.5px;cursor:pointer;transition:background .12s ease,color .12s ease;}
+  .doc-search-result:hover, .doc-search-result.sel{background:var(--accent);color:#fff;}
+  .doc-search-result span.cat{font-size:11px;color:var(--muted);}
+  .doc-search-result:hover span.cat, .doc-search-result.sel span.cat{color:rgba(255,255,255,.8);}
+  .doc-search-backdrop{display:none;position:fixed;inset:0;z-index:40;}
+  .doc-search-backdrop.open{display:block;}
+  .doc-topbar-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+
+  /* Seletor de unidade gestora e exercício */
+  .hdr-context-wrap{position:relative;flex-shrink:0;}
+  .hdr-context-btn{display:flex;align-items:center;gap:10px;border:1px solid var(--border);border-radius:10px;padding:7px 12px;cursor:pointer;transition:border-color .15s ease;}
+  .hdr-context-btn:hover{border-color:var(--primary);}
+  .hdr-context-text{line-height:1.3;white-space:nowrap;}
+  .hdr-context-text b{display:block;font-size:12.5px;color:var(--primary);font-weight:700;}
+  .hdr-context-text span{font-size:11px;color:var(--fg);opacity:.65;}
+  .hdr-context-brasao{width:26px;height:26px;border-radius:6px;background:var(--mutedbg);color:var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+
+  /* Ícones de cabeçalho (suporte, ClienteMAIS, ocorrências, usuário, sistemas) */
+  .hdr-icon-wrap{position:relative;}
+  .hdr-icon-btn{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--muted);cursor:pointer;transition:background .15s ease,color .15s ease;}
+  .hdr-icon-btn:hover{background:var(--accent);color:#fff;}
+  .hdr-avatar-btn{background:var(--mutedbg);}
+
+  /* Dropdowns genéricos do cabeçalho */
+  .hdr-dropdown{display:none;position:absolute;top:calc(100% + 10px);right:0;min-width:230px;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:0 12px 28px rgba(10,26,46,.15);padding:8px;z-index:45;}
+  .hdr-context-wrap .hdr-dropdown{right:auto;left:0;min-width:260px;padding:14px;}
+  .hdr-dropdown.open{display:block;}
+  .hdr-dropdown-wide{min-width:300px;padding:10px;}
+  .hdr-dropdown-title{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);padding:6px 10px 10px;}
+  .hdr-dropdown-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;font-size:13px;cursor:pointer;transition:background .15s ease,color .15s ease;}
+  .hdr-dropdown-item:hover{background:var(--accent);color:#fff;}
+  .hdr-dropdown-item-exit{color:var(--destructive);}
+  .hdr-dropdown-item-exit:hover{background:var(--destructive);color:#fff;}
+  .hdr-field-label{display:block;font-size:11.5px;color:var(--muted);margin:10px 0 4px;}
+  .hdr-select{width:100%;border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-family:inherit;font-size:13px;background:#fff;}
+  .hdr-occurrence{display:flex;flex-direction:column;gap:4px;padding:12px 10px;border-radius:8px;border-bottom:1px solid var(--border);transition:opacity .2s ease,max-height .2s ease;}
+  .hdr-occurrence:last-of-type{border-bottom:none;}
+  .hdr-occurrence-head{display:flex;justify-content:space-between;align-items:center;}
+  .hdr-occurrence b{font-size:11px;color:var(--primary);text-transform:uppercase;letter-spacing:.03em;}
+  .hdr-occurrence span{font-size:13px;}
+  .hdr-occurrence small{font-size:11px;color:var(--muted);}
+  .hdr-occurrence-end{text-align:center;padding:14px 10px 6px;font-size:12px;color:var(--muted);}
+  .hdr-occ-header{display:flex;justify-content:space-between;align-items:center;padding:6px 10px 8px;}
+  .hdr-occ-clearall{font-size:11.5px;color:var(--primary);cursor:pointer;font-weight:600;}
+  .hdr-occ-clearall:hover{text-decoration:underline;}
+  .hdr-occ-dismiss{cursor:pointer;color:var(--muted);font-size:12px;flex-shrink:0;padding:2px 4px;}
+  .hdr-occ-dismiss:hover{color:var(--destructive);}
+  .hdr-occ-actions{display:flex;align-items:center;gap:8px;margin-top:4px;flex-wrap:wrap;}
+  .hdr-occ-btn{border:none;border-radius:7px;padding:5px 12px;font-size:11.5px;font-weight:600;font-family:inherit;cursor:pointer;}
+  .hdr-occ-approve{background:var(--accent);color:#fff;}
+  .hdr-occ-deny{background:var(--mutedbg);color:var(--fg);}
+  .hdr-occ-link{font-size:11.5px;color:var(--primary);font-weight:600;cursor:pointer;margin-left:auto;}
+  .hdr-occ-link:hover{text-decoration:underline;}
+  .doc-footer-real{margin-top:auto;padding:14px 32px;border-top:1px solid var(--border);font-size:11.5px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;background:#fff;}
+
+  aside{width:var(--sidebar-w);flex-shrink:0;height:100vh;position:sticky;top:0;background:#fff;color:var(--fg);padding:20px 12px;overflow-y:auto;overflow-x:hidden;border-right:1px solid var(--border);box-shadow:2px 0 4px rgba(0,0,0,.05);transition:width .36s cubic-bezier(.65,0,.35,1);}
+  aside.collapsed{width:60px;padding:20px 8px;}
+  aside.collapsed .navgroup-title, aside.collapsed nav a span{display:none;}
+  aside.collapsed .brand span, aside.collapsed .brand b{display:none;}
+  aside.collapsed nav a{justify-content:center;}
+  .brand{padding:0 8px 16px;border-bottom:1px solid var(--border);margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+  .brand-logo{width:30px;height:30px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+  .brand b{font-size:15px;display:block;letter-spacing:.01em;color:var(--primary);}
+  .brand span{font-size:11px;color:var(--muted);}
+  .navgroup{margin-bottom:6px;}
+  .navgroup-title{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:14px 12px 6px;}
+  nav a{display:flex;align-items:center;gap:10px;padding:9px 12px;margin-bottom:2px;border-radius:8px;font-size:13.5px;color:var(--fg);text-decoration:none;cursor:pointer;transition:background .15s ease, color .15s ease;}
+  nav a svg{flex-shrink:0;opacity:.75;}
+  nav a:hover, nav a.active{background:var(--accent);color:#fff;font-weight:600;}
+  nav a:hover svg, nav a.active svg{opacity:1;}
+
+  main{flex:1;padding:40px 48px 100px;max-width:1000px;}
+  .page{display:none;}
+  .page.active{display:block;animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .intro-logo{margin-bottom:20px;}
+  .intro-logo svg{display:block;}
+  .page > .eyebrow{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
+  .page > h1{font-size:26px;margin:0 0 10px;}
+  .page > p.lead{color:var(--muted);font-size:14.5px;max-width:680px;margin-bottom:32px;}
+
+  h2.sub{font-size:14px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin:32px 0 14px;border-bottom:1px solid var(--border);padding-bottom:8px;}
+  .note{background:#FFF8E1;border:1px solid #F0DFA0;border-radius:8px;padding:12px 16px;font-size:13px;margin:14px 0;}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;}
+  .swatch{border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--card);}
+  .swatch .fill{height:64px;}
+  .swatch .meta{padding:8px 10px;font-size:12px;}
+  .swatch .meta b{display:block;font-size:12.5px;margin-bottom:2px;}
+  .swatch .meta code{font-size:11px;color:var(--muted);}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+  table a{color:var(--primary);text-decoration:none;}
+  table a:hover{text-decoration:underline;}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--border);}
+  th{background:#fff;font-size:11.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);}
+  tr:last-child td{border-bottom:none;}
+
+  .type-row{display:flex;align-items:baseline;gap:16px;padding:10px 0;border-bottom:1px solid var(--border);}
+  .type-row:last-child{border-bottom:none;}
+  .type-row .label{width:170px;font-size:11.5px;color:var(--muted);flex-shrink:0;}
+
+  pre{background:#0A1A2E;color:#D6E4FF;padding:16px 18px;border-radius:10px;overflow:auto;font-size:12.5px;line-height:1.6;}
+  .comp-demo{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:22px;display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-bottom:8px;}
+  .spec{font-size:12.5px;color:var(--muted);margin:6px 0 20px;}
+
+  .btn-primary{background:var(--primary);color:#fff;border:none;padding:10px 24px;border-radius:12.8px;font-weight:500;font-size:14px;font-family:inherit;height:40px;cursor:pointer;transition:background .18s ease, transform .1s ease;}
+  .btn-primary:hover{background:#173a76;}
+  .btn-primary:active{transform:scale(.97);}
+  .btn-outline{background:transparent;color:var(--primary);border:1px solid var(--border);padding:10px 24px;border-radius:12.8px;font-weight:500;font-size:14px;font-family:inherit;height:40px;cursor:pointer;transition:background .18s ease;}
+  .btn-ghost{background:transparent;color:#57575A;border:none;padding:10px 12px;border-radius:6px;font-weight:500;font-size:14px;font-family:inherit;height:40px;cursor:pointer;transition:background .2s ease, color .2s ease, transform .2s ease;}
+  .btn-ghost:hover{background:var(--accent);color:#fff;transform:scale(1.05);}
+  .btn-outline:hover{background:#F0F2F8;}
+  .btn-disabled{background:var(--primary);opacity:.5;color:#fff;border:none;padding:10px 24px;border-radius:12.8px;font-weight:500;font-size:14px;font-family:inherit;height:40px;}
+  .btn-icon-delete{background:transparent;color:#9a9a9d;border:none;width:40px;height:40px;border-radius:12px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background .15s ease,color .15s ease;}
+  .btn-icon-delete:hover{background:var(--destructive);color:#fff;}
+  .btn-icon-delete-sm{width:28px;height:28px;border-radius:8px;}
+  .punch-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:13.5px;}
+  .punch-warning{background:#FFF3D6;color:#8A6100;border-radius:8px;padding:10px 12px;font-size:12px;margin-top:10px;}
+  .profile-header{display:flex;align-items:center;gap:20px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:16px;flex-wrap:wrap;}
+  .profile-photo{width:72px;height:72px;border-radius:50%;background:linear-gradient(180deg,#e9e9ea,#cfcfd1);flex-shrink:0;}
+  .profile-info{flex:1;min-width:200px;}
+  .profile-info b{display:block;font-size:17px;margin-bottom:6px;}
+  .profile-info span{font-size:12.5px;color:var(--muted);}
+  .tab-content-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px;}
+  .btn-sm{border:1px solid var(--border);background:#fff;border-radius:8.8px;padding:6px 12px;font-size:12.5px;font-family:inherit;cursor:pointer;transition:all .15s ease;}
+  .btn-sm:hover{background:#F0F2F8;border-color:var(--primary);}
+  .btn-sm.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+
+  .card-demo{background:var(--card);border:1px solid var(--border);border-radius:12.8px;padding:16px;width:220px;}
+  .input-demo{display:flex;flex-direction:column;gap:4px;width:220px;}
+  .input-demo label{font-size:12px;color:var(--muted);}
+  .input-demo input{border:1px solid var(--border);border-radius:12.8px;padding:10px 12px;font-family:inherit;font-size:14px;width:100%;transition:border-color .15s ease;}
+  .input-demo input:focus{outline:none;border-color:var(--accent);border-width:2px;padding:9px 11px;}
+
+  /* CAMPO SOMENTE LEITURA (formulário sem interação) */
+  .readonly-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;}
+  .readonly-section-title{font-size:18px;margin:0 0 14px;}
+  .readonly-field{margin-bottom:14px;}
+  .readonly-field label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:5px;}
+  .readonly-value{background:#EEF1FA;border-radius:12.8px;padding:11px 14px;font-weight:700;font-size:13.5px;color:var(--fg);}
+  .readonly-expand{background:#EEF1FA;border-radius:12.8px;overflow:hidden;cursor:pointer;max-width:480px;}
+  .readonly-expand-head{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;font-weight:700;font-size:13.5px;}
+  .readonly-expand-head .chev{transition:transform .2s ease;color:var(--muted);}
+  .readonly-expand.open .chev{transform:rotate(180deg);}
+  .readonly-expand-body{max-height:0;overflow:hidden;transition:max-height .25s ease;display:flex;gap:20px;flex-wrap:wrap;font-size:13px;padding:0 16px;}
+  .readonly-expand.open .readonly-expand-body{max-height:80px;padding:0 16px 16px;}
+  .chip{display:inline-block;background:var(--mutedbg);border-radius:999px;padding:4px 12px;font-size:11px;color:#57575A;}
+  .status-chip{display:inline-block;border-radius:999px;padding:4px 12px;font-size:11.5px;font-weight:600;}
+  .status-active{background:#E6F8F0;color:#01814E;}
+  .status-pending{background:#FFF3D6;color:#8A6100;}
+  .status-error{background:#FEE2E2;color:#B91C1C;}
+  .toast{background:#0A1A2E;color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;display:inline-flex;align-items:center;gap:8px;}
+
+  /* TOAST REAL (canto superior direito, animado) */
+  .toast-live{position:fixed;top:24px;right:24px;max-width:340px;border-radius:8px;box-shadow:0 8px 24px rgba(10,26,46,.25);padding:16px;color:#fff;z-index:50;transform:translateX(140%);transition:transform .3s cubic-bezier(.17,.89,.32,1.28);}
+  .toast-live.show{transform:translateX(0);}
+  .toast-live b{display:block;font-size:16px;margin-bottom:4px;}
+  .toast-live p{margin:0;font-size:13px;font-weight:600;}
+  .toast-live .toast-close{position:absolute;top:10px;right:12px;cursor:pointer;opacity:.8;font-size:14px;}
+  .toast-live.success{background:var(--accent);}
+  .toast-live.error{background:var(--destructive);}
+  .toast-live.info{background:var(--primary);}
+
+  /* MODAL DE CONFIRMAÇÃO */
+  .confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:60;}
+  .confirm-overlay.show{display:flex;}
+  .confirm-card{background:#fff;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.2);max-width:420px;width:90%;padding:24px;}
+  .confirm-icon{width:56px;height:56px;border-radius:50%;background:rgba(239,68,68,.1);display:flex;align-items:center;justify-content:center;color:var(--destructive);font-size:24px;margin-bottom:16px;}
+  .confirm-card h3{margin:0 0 10px;font-size:20px;}
+  .confirm-card p{margin:0 0 20px;color:var(--muted);font-size:15px;line-height:1.4;}
+  .confirm-actions{display:flex;justify-content:flex-end;gap:12px;}
+  .confirm-actions button{width:100px;padding:10px 0;border-radius:8px;font-family:inherit;font-size:13.5px;cursor:pointer;}
+  .confirm-cancel{background:#fff;border:1px solid var(--border);color:var(--muted);}
+  .confirm-confirm{background:var(--accent);border:none;color:#fff;font-weight:600;}
+
+  /* MODAL INFORMAÇÕES DO FLUXO */
+  .fluxo-card{max-width:560px;text-align:left;}
+  .fluxo-head{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:14px;margin-bottom:16px;}
+  .fluxo-head h3{margin:0;font-size:20px;}
+  .fluxo-close{cursor:pointer;color:var(--muted);font-size:16px;}
+  .fluxo-title{font-weight:700;font-size:15px;margin:0 0 6px;}
+  .fluxo-pills{display:flex;gap:10px;margin-bottom:6px;}
+  .fluxo-pill{border:1px solid var(--border);border-radius:999px;padding:5px 14px;font-size:12px;color:var(--muted);}
+  .fluxo-signer{display:flex;align-items:center;gap:12px;background:var(--bg);border-radius:10px;padding:12px 14px;margin-top:10px;}
+  .fluxo-signer-num{width:26px;height:26px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;background:#fff;}
+  .fluxo-signer-info{flex:1;font-size:13px;}
+  .fluxo-signer-info span{display:block;font-size:11px;color:var(--muted);}
+  .fluxo-doc-drop{border:2px dashed var(--border);border-radius:10px;padding:30px;text-align:center;font-size:24px;color:var(--muted);margin-top:10px;}
+  .fluxo-status-pending{background:#fff;border:1px solid var(--border);color:var(--muted);border-radius:999px;padding:5px 14px;font-size:11.5px;font-weight:600;}
+  .fluxo-status-signed{background:var(--accent);color:#fff;border-radius:999px;padding:5px 14px;font-size:11.5px;font-weight:600;}
+
+  .accordion{border:1px solid var(--border);border-radius:10px;overflow:hidden;width:100%;max-width:420px;background:var(--card);}
+  .accordion-head{padding:12px 16px;display:flex;justify-content:space-between;font-size:13.5px;font-weight:500;cursor:pointer;user-select:none;}
+  .accordion-head .arrow{transition:transform .2s ease;}
+  .accordion-head.open .arrow{transform:rotate(180deg);}
+  .accordion-body{max-height:0;overflow:hidden;transition:max-height .25s ease, padding .25s ease;padding:0 16px;font-size:12.5px;color:var(--muted);border-top:1px solid transparent;}
+  .accordion-body.open{max-height:200px;padding:12px 16px 16px;border-top:1px solid var(--border);}
+
+  /* TABELAS · CATÁLOGO DE PADRÕES */
+  .tbl-toolbar{display:flex;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap;}
+  .tbl-search{border:1px solid var(--border);border-radius:10px;padding:8px 12px;font-family:inherit;font-size:13px;width:220px;}
+  .tbl-wrap{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+  .tbl-wrap table{border:none;border-radius:0;}
+  th.sortable{cursor:pointer;user-select:none;}
+  th.sortable .arrow{display:inline-block;margin-left:4px;transition:transform .2s ease;opacity:.5;}
+  th.sortable.desc .arrow{transform:rotate(180deg);}
+  th.sortable.active .arrow{opacity:1;color:var(--primary);}
+  tr.tbl-row{transition:background .15s ease;}
+  tr.tbl-row:hover{background:#EAF7EE;}
+  tr.tbl-row.selected{background:#EEF3FF;}
+  .bulkbar{max-height:0;overflow:hidden;transition:max-height .25s ease, padding .25s ease, margin .25s ease;background:#0A1A2E;color:#fff;border-radius:10px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;}
+  .bulkbar.show{max-height:60px;padding:12px 16px;margin-bottom:10px;}
+  .bulkbar button{background:var(--accent);color:#0A1A2E;border:none;border-radius:8px;padding:6px 14px;font-size:12.5px;font-weight:600;cursor:pointer;}
+  .pagination{display:flex;gap:6px;justify-content:flex-end;padding:12px 14px;}
+  .pag-simple{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+  .pag-simple-label{font-size:14px;font-weight:600;color:var(--fg);}
+  .pag-simple-controls{display:flex;gap:8px;background:rgba(230,230,231,.3);border:1px solid var(--border);border-radius:10px;padding:6px;flex-wrap:wrap;}
+  .pag-btn-outline{border:1px solid var(--border);background:#fff;border-radius:8px;padding:8px 14px;font-size:12.5px;font-family:inherit;cursor:pointer;transition:background .15s ease;}
+  .pag-btn-outline:hover{background:#F0F2F8;}
+  .pag-btn-solid{border:none;background:var(--primary);color:#fff;border-radius:8px;padding:8px 14px;font-size:12.5px;font-family:inherit;cursor:pointer;transition:background .15s ease;}
+  .pag-btn-solid:hover{background:#173a76;}
+  .pag-footer{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;flex-wrap:wrap;gap:10px;border-top:1px solid var(--border);}
+  .pag-info{display:flex;align-items:center;gap:18px;font-size:12.5px;color:var(--muted);}
+  .pag-size-selector select{border:1px solid var(--border);border-radius:8px;padding:4px 8px;font-family:inherit;font-size:12.5px;margin-left:6px;}
+  .type-pill{border:1px solid var(--border);border-radius:999px;padding:3px 12px;font-size:11.5px;background:#fff;}
+  .status-pill-outline{border:1px solid var(--border);border-radius:999px;padding:3px 12px;font-size:11.5px;color:var(--muted);display:inline-flex;align-items:center;gap:5px;}
+  .btn-detail{background:#0A1A2E;color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:12.5px;font-family:inherit;cursor:pointer;}
+  .pagination button{border:none;background:transparent;width:32px;height:32px;border-radius:12px;cursor:pointer;font-size:13px;font-weight:500;transition:all .15s ease;color:var(--fg);}
+  .pagination button.arrow-btn{border:1px solid var(--border);background:#fff;border-radius:10px;}
+  .pagination button.arrow-btn:disabled{opacity:.4;cursor:default;}
+  .pagination button.page-num.active{background:rgba(245,245,246,.75);color:var(--fg);border:1px solid var(--border);font-weight:600;}
+  .pagination button:hover:not(.active):not(:disabled){background:#F0F2F8;}
+  .expand-row td{padding:0;}
+  .expand-content{max-height:0;overflow:hidden;transition:max-height .25s ease;background:#FAFBFE;}
+  .expand-content.open{max-height:140px;padding:14px 20px;}
+  .expand-toggle{cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
+  .expand-toggle .chev{transition:transform .2s ease;font-size:10px;}
+  .expand-toggle.open .chev{transform:rotate(90deg);}
+  .skeleton{background:linear-gradient(90deg,#EDEFF5 25%,#F6F7FB 37%,#EDEFF5 63%);background-size:400% 100%;animation:shimmer 1.4s ease infinite;border-radius:6px;height:14px;}
+  @keyframes shimmer{0%{background-position:100% 50%}100%{background-position:0 50%}}
+  .empty-state{text-align:center;padding:48px 20px;color:var(--muted);}
+  .empty-state .icon{font-size:32px;margin-bottom:10px;opacity:.4;}
+  .tab-strip{display:flex;gap:16px;margin-bottom:16px;}
+  .tab-strip button{flex:1;background:none;border:none;padding:13px 16px;font-family:inherit;font-size:13.5px;font-weight:600;color:var(--fg);cursor:pointer;border-radius:999px;transition:all .18s ease;}
+  .tab-strip button:hover:not(.active){background:var(--mutedbg);}
+  .tab-strip button.active{background:var(--accent);color:#fff;box-shadow:0 2px 6px rgba(117,197,102,.35);}
+  .tbl-section{display:none;}
+  .tbl-section.active{display:block;animation:fade .2s ease;}
+
+  footer.docfooter{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);font-size:11.5px;color:var(--muted);display:flex;justify-content:space-between;}
+
+  /* PADRÃO DE PÁGINA INTERNA */
+  .pattern-demo{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:24px;margin-bottom:8px;}
+  .pattern-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;margin-bottom:20px;}
+  .pattern-header h2{margin:0;font-size:28px;color:var(--primary);}
+  .pattern-header p{margin:4px 0 0;color:var(--muted);font-size:14px;}
+  .pattern-back{flex-shrink:0;}
+
+  /* NAVEGAÇÃO / SIDEBAR */
+  .shell-demo{border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--card);}
+  .shell-topbar-strip{height:4px;background:#0A1A2E;}
+  .shell-topbar{display:flex;align-items:center;gap:16px;padding:10px 20px;border-bottom:1px solid var(--border);}
+  .shell-brand{display:flex;align-items:center;gap:10px;flex-shrink:0;width:210px;overflow:hidden;transition:width .28s ease;}
+  .shell-brand.collapsed{width:34px;}
+  .shell-logo{width:34px;height:34px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+  .shell-brand-text{white-space:nowrap;}
+  .shell-brand-text b{display:block;font-size:14px;color:var(--primary);}
+  .shell-brand-text span{font-size:11px;color:var(--muted);}
+  .shell-collapse-btn{border:1px solid var(--border);background:#fff;border-radius:8px;width:30px;height:30px;cursor:pointer;font-size:12px;flex-shrink:0;transition:background .15s ease;display:flex;align-items:center;justify-content:center;}
+  .shell-collapse-btn:hover{background:#F0F2F8;}
+  .shell-search{flex:1;border:1px solid var(--border);border-radius:10px;padding:8px 14px;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px;max-width:340px;}
+  .shell-search kbd{margin-left:auto;background:var(--mutedbg);border-radius:5px;padding:1px 6px;font-size:10.5px;}
+  .shell-org{display:flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:10px;padding:6px 12px;flex-shrink:0;cursor:pointer;transition:background .15s ease,color .15s ease;position:relative;}
+  .shell-org:hover, .shell-org.open{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .shell-org:hover .shell-org-text span, .shell-org.open .shell-org-text span{color:#EFFFF3;}
+  .shell-org-panel{position:absolute;top:calc(100% + 8px);right:0;width:340px;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px rgba(10,26,46,.12);padding:14px 16px;font-size:12.5px;color:var(--fg);z-index:5;display:none;}
+  .shell-org-panel.open{display:block;}
+  .shell-org-panel b.panel-title{display:block;font-size:13px;margin-bottom:10px;}
+  .shell-org-row{border-radius:8px;padding:10px 12px;line-height:1.7;cursor:pointer;transition:background .15s ease,color .15s ease;}
+  .shell-org-row:hover{background:var(--accent);color:#fff;}
+  .shell-org-row:hover .status-pill{background:#fff;color:var(--accent-dark,#01814E);}
+  .status-pill{border:1px solid var(--border);border-radius:999px;padding:2px 10px;font-size:11px;}
+  .shell-org-icon{width:20px;height:20px;border-radius:5px;background:var(--mutedbg);}
+  .shell-org-text{font-size:11.5px;line-height:1.3;white-space:nowrap;}
+  .shell-org-text b{display:block;font-size:12.5px;}
+  .shell-org-text span{color:var(--muted);}
+  .shell-chevron{color:var(--muted);font-size:10px;}
+  .shell-bell,.shell-avatar{flex-shrink:0;}
+  .shell-bell{opacity:.65;display:flex;align-items:center;}
+  #collapseArrow, #docCollapseArrow{transform-origin:12px 12px;transition:transform .2s ease;}
+  .shell-collapse-btn.flipped #collapseArrow, .shell-collapse-btn.flipped #docCollapseArrow{transform:scaleX(-1);}
+  .shell-avatar{width:32px;height:32px;border-radius:50%;background:var(--mutedbg);}
+  .shell-body{display:flex;min-height:360px;}
+  .shell-sidebar{width:280px;flex-shrink:0;background:#fff;border-right:1px solid var(--border);padding:14px 10px;transition:width .36s cubic-bezier(.65,0,.35,1);overflow:hidden;box-shadow:2px 0 4px rgba(0,0,0,.05);}
+  .shell-sidebar.collapsed{width:60px;}
+  .shell-nav-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;font-size:13.5px;color:var(--fg);cursor:pointer;white-space:nowrap;margin-bottom:2px;transition:background .15s ease;}
+  .shell-nav-item:hover, .shell-nav-item.active{background:var(--accent);color:#fff;font-weight:600;}
+  .shell-icon{width:18px;height:18px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+  .shell-content{flex:1;padding:24px;background:var(--bg);}
+  .shell-cards{display:flex;gap:12px;flex-wrap:wrap;}
+  .shell-card{width:120px;height:100px;border:1px solid var(--border);border-radius:12px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;font-size:12px;text-align:center;}
+  .shell-card-icon{color:var(--accent);font-size:20px;}
+  .shell-footer{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);flex-wrap:wrap;gap:6px;}
+</style>
+</head>
+<body>
+
+<aside>
+  <div class="brand"><div class="brand-logo"><svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2932.78 2038.08">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #75c566;
+      }
+    </style>
+  </defs>
+  <path class="cls-1" d="M1619.26,1065.38c62.83-124.6,120.94-243.44,177.48-364.89,37.17-79.05,72.76-151.83,108.37-223.55,65.44-129.83,195.27-214.65,335.06-215.18,117.8,0,227.73,40.84,309.92,115.18,78,70.15,120.94,163.34,120.94,261.76v760.68c0,207.84-193.18,376.94-430.86,376.94-117.79,0-227.74-40.83-309.93-115.18-78-70.15-120.93-163.33-120.93-261.76v-24.61l-184.28,318.83c32.98,59.68,76.96,114.12,129.83,161.77,129.83,117.79,302.07,182.71,485.31,182.71,381.65,0,692.62-286.36,692.62-638.7v-760.68c0-173.28-73.82-335.58-207.32-455.99C2595.64,64.92,2423.39,0,2235.44,0c-234.01,1.05-454.94,142.4-563.84,359.67-37.17,73.29-73.81,148.68-112.03,229.82-86.38,185.85-176.96,364.89-282.18,572.74-50.27,99.47-103.14,204.7-160.19,318.82-50.79,101.56-128.8,183.76-219.36,230.35-64.92,32.98-131.93,48.69-200.51,46.07-202.09-7.33-383.22-171.19-435.57-391.6v-696.81c0-224.59,182.71-407.3,407.3-407.3h308.87V0h-308.87C299.98,0,0,299.98,0,669.07v725.09l2.62,13.61c72.77,342.38,361.23,599.96,685.29,611.47,114.13,4.19,224.59-21.47,329.29-75.38,134.03-68.58,243.45-178.53,319.88-318.83,5.24-8.89,9.94-17.8,14.66-27.22,56.54-113.61,109.41-218.31,159.67-317.26,37.7-74.86,73.29-146.06,107.84-215.16Z"/>
+</svg></div><div><b>Coplan</b><span>Design System · v2.0</span></div></div>
+  <nav id="nav">
+    <div class="navgroup">
+      <div class="navgroup-title">Visão geral</div>
+      <a data-page="intro" class="active" title="Introdução"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5"/></svg><span>Introdução</span></a>
+    </div>
+    <div class="navgroup">
+      <div class="navgroup-title">Fundamentos</div>
+      <a data-page="colors" title="Cores"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2a10 10 0 1 0 0 20 3 3 0 0 0 3-3 2 2 0 0 1 2-2h1a5 5 0 0 0 5-5A10 10 0 0 0 12 2z"/></svg><span>Cores</span></a>
+      <a data-page="typography" title="Tipografia"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg><span>Tipografia</span></a>
+      <a data-page="spacing" title="Espaçamento &amp; Radius"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="8" rx="1"/><line x1="7" y1="8" x2="7" y2="16"/><line x1="17" y1="8" x2="17" y2="16"/></svg><span>Espaçamento &amp; Radius</span></a>
+    </div>
+    <div class="navgroup">
+      <div class="navgroup-title">Componentes</div>
+      <a data-page="buttons" title="Botões"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="8" rx="4"/></svg><span>Botões</span></a>
+      <a data-page="inputs" title="Campos de formulário"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><line x1="7" y1="12" x2="13" y2="12"/></svg><span>Campos de formulário</span></a>
+      <a data-page="cards" title="Cards"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="8" height="8" rx="1"/><rect x="13" y="4" width="8" height="8" rx="1"/><rect x="3" y="14" width="8" height="6" rx="1"/><rect x="13" y="14" width="8" height="6" rx="1"/></svg><span>Cards</span></a>
+      <a data-page="tables" title="Tabelas"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="9" y1="10" x2="9" y2="20"/></svg><span>Tabelas</span></a>
+      <a data-page="icons" title="Ícones"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg><span>Ícones</span></a>
+      <a data-page="navigation" title="Navegação / Sidebar"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg><span>Navegação / Sidebar</span></a>
+      <a data-page="feedback" title="Feedback &amp; Status"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg><span>Feedback &amp; Status</span></a>
+      <a data-page="confirm" title="Confirmação (Cancelar/Confirmar)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.5 2.5 5-5"/></svg><span>Confirmação (Cancelar/Confirmar)</span></a>
+      <a data-page="domain" title="Componentes de domínio"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg><span>Componentes de domínio</span></a>
+    </div>
+    <div class="navgroup">
+      <div class="navgroup-title">Padrões de tela</div>
+      <a data-page="auth-login" title="Login"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg><span>Login</span></a>
+      <a data-page="auth-recovery" title="Recuperar senha"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="m10.5 12.5 7-7L20 8l-2.5 2.5"/><path d="m15 6 3 3"/></svg><span>Recuperar senha</span></a>
+      <a data-page="auth-firstaccess" title="Primeiro acesso"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg><span>Primeiro acesso</span></a>
+      <a data-page="auth-error" title="Erro / Sessão expirada"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 17h.01"/></svg><span>Erro / Sessão expirada</span></a>
+      <a data-page="page-pattern" title="Padrão de página interna"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/></svg><span>Padrão de página interna</span></a>
+    </div>
+    <div class="navgroup">
+      <div class="navgroup-title">Implementação</div>
+      <a data-page="code" title="Tailwind / CSS"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg><span>Tailwind / CSS</span></a>
+    </div>
+  </nav>
+</aside>
+
+<div class="shell-right">
+<header class="doc-topbar">
+  <button class="shell-collapse-btn" id="docCollapseBtn" onclick="toggleDocSidebar()" title="Fechar Menu"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="docCollapseIcon"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><path d="M14 9l-2 3 2 3" id="docCollapseArrow"/></svg></button>
+  <div class="doc-search-wrap">
+    <div class="doc-search" id="docSearchBox" onclick="openDocSearch()">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <span>O que você procura?</span>
+      <kbd>⌘K</kbd>
+    </div>
+    <div class="doc-search-panel" id="docSearchPanel">
+      <input type="text" id="docSearchInput" placeholder="Buscar seção do design system..." oninput="filterDocSearch()" autocomplete="off">
+      <div id="docSearchResults"></div>
+    </div>
+  </div>
+
+  <div class="hdr-context-wrap">
+    <div class="hdr-context-btn" id="hdrContextBtn" onclick="toggleDropdown('hdrContextPanel')">
+      <div class="hdr-context-brasao" title="Brasão do município (substituído pelo arquivo real em produção)">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.4 8 11 4.6-2.6 8-6 8-11V5z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <div class="hdr-context-text"><b>Prefeitura Municipal de Nova Mutum</b><span>Competência: Julho/2026</span></div>
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="hdr-dropdown" id="hdrContextPanel">
+      <div class="hdr-dropdown-title">Unidade gestora e competência</div>
+      <label class="hdr-field-label">Unidade Gestora</label>
+      <select class="hdr-select"><option>Prefeitura Municipal de Nova Mutum</option><option>Câmara Municipal de Nova Mutum</option></select>
+      <label class="hdr-field-label">Competência</label>
+      <div style="display:flex;gap:8px">
+        <select class="hdr-select"><option>Janeiro</option><option>Fevereiro</option><option>Março</option><option>Abril</option><option>Maio</option><option>Junho</option><option selected>Julho</option><option>Agosto</option><option>Setembro</option><option>Outubro</option><option>Novembro</option><option>Dezembro</option></select>
+        <select class="hdr-select" style="max-width:100px"><option selected>2026</option><option>2025</option><option>2024</option></select>
+      </div>
+    </div>
+  </div>
+
+  <div class="doc-topbar-right">
+    <div class="hdr-icon-wrap">
+      <div class="hdr-icon-btn" title="Fale conosco pelo WhatsApp" onclick="window.open('https://api.whatsapp.com/send/?phone=5565981617878&text&type=phone_number&app_absent=0','_blank')"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2.2c-5.4 0-9.8 4.4-9.8 9.8 0 1.7.5 3.4 1.3 4.8L2 22l5.3-1.4c1.4.8 3 1.2 4.7 1.2 5.4 0 9.8-4.4 9.8-9.8s-4.4-9.8-9.8-9.8zm0 17.9c-1.5 0-3-.4-4.2-1.2l-.3-.2-3.1.8.8-3-.2-.3c-.9-1.3-1.3-2.8-1.3-4.4 0-4.5 3.7-8.2 8.2-8.2s8.2 3.7 8.2 8.2-3.6 8.3-8.1 8.3zm4.5-6.2c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.3-.7.8-.8 1-.2.2-.3.2-.5.1-.2-.1-1-.4-2-1.2-.7-.6-1.2-1.4-1.4-1.7-.1-.2 0-.4.1-.5.1-.1.3-.3.4-.5.1-.1.2-.3.2-.4.1-.2 0-.3 0-.4-.1-.1-.6-1.5-.9-2-.2-.5-.5-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2s.9 2.4 1 2.6c.1.2 1.8 2.7 4.3 3.7.6.3 1.1.4 1.4.6.6.2 1.1.1 1.6.1.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2-.1-.1-.3-.2-.5-.3z"/></svg></div>
+    </div>
+    <div class="hdr-icon-wrap">
+      <div class="hdr-icon-btn" title="ClienteMAIS, suporte ao usuário" onclick="window.open('https://cliente.coplanmt.com.br/clientemais_clientemais/servlet/login_coplan','_blank')"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="4.9" y1="4.9" x2="9.2" y2="9.2"/><line x1="14.8" y1="14.8" x2="19.1" y2="19.1"/><line x1="14.8" y1="9.2" x2="19.1" y2="4.9"/><line x1="4.9" y1="19.1" x2="9.2" y2="14.8"/></svg></div>
+    </div>
+
+    <div class="hdr-icon-wrap">
+      <div class="hdr-icon-btn" onclick="toggleDropdown('hdrOcorrenciasPanel')"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></div>
+      <div class="hdr-dropdown hdr-dropdown-wide" id="hdrOcorrenciasPanel">
+        <div class="hdr-occ-header">
+          <span class="hdr-dropdown-title" style="padding:0">Ocorrências</span>
+          <span class="hdr-occ-clearall" onclick="clearAllOccurrences()">Limpar tudo</span>
+        </div>
+        <div id="hdrOccList">
+          <div class="hdr-occurrence">
+            <div class="hdr-occurrence-head"><b>Empenho / Liquidação / Pagamento</b><span class="hdr-occ-dismiss" onclick="dismissOccurrence(this)">✕</span></div>
+            <span>3 processos aguardando sua assinatura no fluxo de empenho, liquidação e pagamento.</span>
+            <div class="hdr-occ-actions"><a class="hdr-occ-link">Ver no sistema ›</a></div>
+            <small>há 12 min</small>
+          </div>
+          <div class="hdr-occurrence">
+            <div class="hdr-occurrence-head"><b>Documentos para assinar</b><span class="hdr-occ-dismiss" onclick="dismissOccurrence(this)">✕</span></div>
+            <span>2 documentos pendentes de assinatura GOV.BR.</span>
+            <div class="hdr-occ-actions"><a class="hdr-occ-link">Ver no sistema ›</a></div>
+            <small>há 40 min</small>
+          </div>
+          <div class="hdr-occurrence">
+            <div class="hdr-occurrence-head"><b>NAD para autorizar</b><span class="hdr-occ-dismiss" onclick="dismissOccurrence(this)">✕</span></div>
+            <span>NAD nº 0231/2026, Maria Souza, aguardando autorização.</span>
+            <div class="hdr-occ-actions">
+              <button class="hdr-occ-btn hdr-occ-approve" onclick="dismissOccurrence(this)">Deferir</button>
+              <button class="hdr-occ-btn hdr-occ-deny" onclick="dismissOccurrence(this)">Indeferir</button>
+              <a class="hdr-occ-link">Ver no sistema ›</a>
+            </div>
+            <small>há 1 h</small>
+          </div>
+          <div class="hdr-occurrence">
+            <div class="hdr-occurrence-head"><b>Diárias e Adiantamentos</b><span class="hdr-occ-dismiss" onclick="dismissOccurrence(this)">✕</span></div>
+            <span>Diária de Carlos Mendes, viagem a Cuiabá, R$ 450,00, aguardando autorização.</span>
+            <div class="hdr-occ-actions">
+              <button class="hdr-occ-btn hdr-occ-approve" onclick="dismissOccurrence(this)">Deferir</button>
+              <button class="hdr-occ-btn hdr-occ-deny" onclick="dismissOccurrence(this)">Indeferir</button>
+              <a class="hdr-occ-link">Ver no sistema ›</a>
+            </div>
+            <small>há 2 h</small>
+          </div>
+          <div class="hdr-occurrence">
+            <div class="hdr-occurrence-head"><b>Férias e Ajuste de Ponto</b><span class="hdr-occ-dismiss" onclick="dismissOccurrence(this)">✕</span></div>
+            <span>Solicitação de férias de Ana Lima, 15 dias a partir de 01/08, aguardando autorização.</span>
+            <div class="hdr-occ-actions">
+              <button class="hdr-occ-btn hdr-occ-approve" onclick="dismissOccurrence(this)">Deferir</button>
+              <button class="hdr-occ-btn hdr-occ-deny" onclick="dismissOccurrence(this)">Indeferir</button>
+              <a class="hdr-occ-link">Ver no sistema ›</a>
+            </div>
+            <small>há 3 h</small>
+          </div>
+        </div>
+        <div class="hdr-occurrence-end" id="hdrOccEnd" style="display:none">Fim das ocorrências</div>
+      </div>
+    </div>
+
+    <div class="hdr-icon-wrap">
+      <div class="shell-avatar hdr-icon-btn hdr-avatar-btn" onclick="toggleDropdown('hdrUserPanel')" title="Usuário"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg></div>
+      <div class="hdr-dropdown" id="hdrUserPanel">
+        <div class="hdr-dropdown-item" onclick="document.querySelector('[data-page=inputs]').click();closeAllDropdowns();"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg>Dados do Usuário</div>
+        <div class="hdr-dropdown-item"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Alterar Senha</div>
+        <div class="hdr-dropdown-item"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 16 14"/></svg>Últimas Atualizações</div>
+        <div class="hdr-dropdown-item" onclick="goToCredits();closeAllDropdowns();"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Sobre este documento</div>
+        <div class="hdr-dropdown-item hdr-dropdown-item-exit"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sair</div>
+      </div>
+    </div>
+
+    <div class="hdr-icon-wrap">
+      <div class="hdr-icon-btn" onclick="toggleDropdown('hdrSistemasPanel')" title="Sistemas"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg></div>
+      <div class="hdr-dropdown" id="hdrSistemasPanel">
+        <div class="hdr-dropdown-title">Sistemas</div>
+        <div class="hdr-dropdown-item">Administrativo</div>
+        <div class="hdr-dropdown-item">Central</div>
+        <div class="hdr-dropdown-item">Contábil</div>
+        <div class="hdr-dropdown-item">Educação</div>
+        <div class="hdr-dropdown-item">Ouvidoria</div>
+        <div class="hdr-dropdown-item">Planejamento</div>
+        <div class="hdr-dropdown-item">Portal da Transparência</div>
+        <div class="hdr-dropdown-item">RH</div>
+        <div class="hdr-dropdown-item">Tributário</div>
+        <div class="hdr-dropdown-item">Gestão de Protocolos</div>
+      </div>
+    </div>
+  </div>
+</header>
+<div class="doc-search-backdrop" id="docSearchBackdrop" onclick="closeDocSearch()"></div>
+
+<main>
+
+  <div class="page active" id="page-intro">
+    <div class="intro-logo"><svg width="180" height="auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3828.08 1137.45">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #75c566;
+      }
+    </style>
+  </defs>
+  <path class="cls-1" d="M2326.38,994.98h127.51v-110.39h-127.51c-90.6,0-164.31-73.71-164.31-164.29V0h-110.39v720.29c0,151.46,123.24,274.68,274.7,274.68Z"/>
+  <path class="cls-1" d="M3666.52,313.19c32.99,29.83,51.16,69.1,51.16,110.58v571.2h110.39V423.77c0-73.09-31.09-141.45-87.51-192.46-54.85-49.63-127.51-76.96-204.59-76.96-161.06,0-292.08,120.86-292.08,269.42v571.2h110.39V423.77c0-87.69,81.5-159.03,181.69-159.03,49.65,0,96.01,17.21,130.55,48.45Z"/>
+  <path class="cls-1" d="M2815.44,994.98h63.91v-99.71c-9.14,1.44-114.77,16.25-185.34-61.06-42.96-47.07-49.13-102.21-50.38-121.45v-288.97c0-87.69,81.52-159.03,181.71-159.03,49.63,0,96.01,17.2,130.55,48.42,32.96,29.84,51.14,69.11,51.14,110.61v571.19h110.39V423.78c0-73.08-31.07-141.44-87.49-192.48-54.87-49.61-127.53-76.94-204.59-76.94-161.06,0-292.1,120.86-292.1,269.42v288.97c.05,18.78,2.17,119.75,84.01,200.62,80.28,79.32,178.83,81.55,198.2,81.6Z"/>
+  <path class="cls-1" d="M682.87,584.77c26.49-52.55,51-102.66,74.85-153.88,15.67-33.34,30.69-64.03,45.7-94.27,27.6-54.75,82.35-90.52,141.3-90.74,49.68,0,96.04,17.22,130.7,48.58,32.9,29.58,51,68.88,51,110.39v320.79c0,87.65-81.47,158.96-181.7,158.96-49.68,0-96.04-17.22-130.7-48.57-32.89-29.58-51-68.88-51-110.39v-10.38l-77.72,134.46c13.91,25.17,32.45,48.13,54.75,68.22,54.75,49.67,127.39,77.05,204.66,77.05,160.95,0,292.09-120.77,292.09-269.35v-320.79c0-73.08-31.13-141.52-87.43-192.3-54.75-49.68-127.39-77.05-206.65-77.05-98.69.44-191.86,60.05-237.78,151.68-15.67,30.91-31.13,62.7-47.24,96.92-36.43,78.38-74.63,153.88-119,241.53-21.2,41.95-43.5,86.33-67.56,134.45-21.42,42.83-54.32,77.49-92.51,97.15-27.38,13.91-55.64,20.53-84.56,19.43-85.22-3.09-161.61-72.2-183.69-165.14v-293.86c0-94.71,77.05-171.77,171.77-171.77h130.26v-110.39h-130.26C126.51,135.48,0,261.98,0,417.63v305.78l1.11,5.74c30.69,144.39,152.34,253.01,289,257.87,48.13,1.77,94.71-9.05,138.87-31.79,56.52-28.92,102.67-75.29,134.9-134.46,2.21-3.75,4.19-7.51,6.18-11.48,23.84-47.91,46.14-92.07,67.34-133.79,15.9-31.57,30.91-61.6,45.48-90.74Z"/>
+  <path class="cls-1" d="M1527.1,961.49c23.47,11.37,73.51,31.72,134.68,30.46,125.04-2.56,204.66-93.65,211.85-102.15,64.06-75.68,68.25-160.67,68.55-186.03l-1.52-300.94c-.44-73.08-32.02-141.08-88.76-191.86-54.75-48.79-126.73-75.51-202.9-75.51h-2.2c-77.27.44-149.69,28.26-204,78.38-52.55,47.91-82.79,111.27-85.88,179.27.29,59.39.59,118.78.88,178.17,38-56.23,76-112.47,114.01-168.7,1.82-22.12,9.11-69.89,45.62-107.5,65.72-67.71,192.23-67.58,260.96-1.77,39.94,38.25,49.23,88.02,51.88,110.17.35,102.6.7,205.2,1.05,307.8-2.24,17.76-10.81,66.7-51.2,109.94-13.42,14.37-53.92,53.34-118.34,60.33-19.34,2.1-54.73,3.02-91.49-13.26-90.68-40.15-109.97-143.31-111.85-154.31l-99.35,171.98,1.76,251.47,110.39-.89-1.32-211.07c16.56,13.25,35.76,25.61,57.18,35.99Z"/>
+</svg></div>
+    <h1>Design System</h1>
+    <p class="lead">Referência única de cor, tipografia, espaçamento e componentes para todos os produtos Coplan (Administrativo, Contábil, Educação, Ouvidoria, Planejamento, Portal da Transparência, RH, Tributário, Gestão de Protocolos e Central). Qualquer time ou parceiro que desenvolva interface para a plataforma segue este documento como fonte única de verdade visual.</p>
+    <div class="note">Este catálogo cobre <b>aparência</b>: cor, tipografia, espaçamento e componentes visuais. Regras de negócio e fluxos específicos de cada módulo são especificados à parte, ver "Componentes de domínio".</div>
+    <h2 class="sub">Consistência entre produtos</h2>
+    <table>
+      <tr><th>Item</th><th>Padrão</th></tr>
+      <tr><td>Paleta de cor</td><td>Única em toda a plataforma</td></tr>
+      <tr><td>Tipografia</td><td>Fonte única (Exo 2), escala tipográfica centralizada</td></tr>
+      <tr><td>Radius / elevação</td><td>Radius 12.8px padrão, elevação 0 (flat) em todos os componentes</td></tr>
+      <tr><td>Breakpoints</td><td>Mesmos valores de responsividade em todos os produtos</td></tr>
+    </table>
+    <p class="spec">Documento mantido por Diego Loureiro, Líder de Inovação, Coplan Tecnologia. Contato: diego.loureiro@coplan.srv.br · (65) 99933-1680</p>
+  </div>
+
+  <div class="page" id="page-colors">
+    <div class="eyebrow">Fundamentos</div>
+    <h1>Cores</h1>
+    <p class="lead">Sistema de cor único da plataforma Coplan.</p>
+
+    <h2 class="sub">Modo claro · paleta principal</h2>
+    <div class="grid">
+      <div class="swatch"><div class="fill" style="background:#1F4993"></div><div class="meta"><b>Primary</b><code>#1F4993</code></div></div>
+      <div class="swatch"><div class="fill" style="background:#75C566"></div><div class="meta"><b>Accent / Ring</b><code>#75C566</code></div></div>
+      <div class="swatch"><div class="fill" style="background:#01814E"></div><div class="meta"><b>Dark Green</b><code>#01814E</code></div></div>
+      <div class="swatch"><div class="fill" style="background:#032861"></div><div class="meta"><b>Blue (marca)</b><code>#032861</code></div></div>
+      <div class="swatch"><div class="fill" style="background:#F5F7FC"></div><div class="meta"><b>Background</b><code>#F5F7FC</code></div></div>
+      <div class="swatch"><div class="fill" style="background:#FFFFFF;border-bottom:1px solid #eee"></div><div class="meta"><b>Card</b><code>#FFFFFF</code></div></div>
+      <div class="swatch"><div class="fill" style="background:#0A1A2E"></div><div class="meta"><b>Foreground (texto)</b><code>#0A1A2E</code></div></div>
+      <div class="swatch"><div class="fill" style="background:#E0E0E1"></div><div class="meta"><b>Border / Input</b><code>#E0E0E1</code></div></div>
+    </div>
+
+    <h2 class="sub">Modo claro · estados e semântica</h2>
+    <div class="grid">
+      <div class="swatch"><div class="fill" style="background:#F5F5F6"></div><div class="meta"><b>Secondary</b><code>#F5F5F6</code></div></div>
+      <div class="swatch"><div class="fill" style="background:#E6E6E7"></div><div class="meta"><b>Muted</b><code>#E6E6E7</code></div></div>
+      <div class="swatch"><div class="fill" style="background:#8A8A8D"></div><div class="meta"><b>Muted Foreground</b><code>#8A8A8D</code></div></div>
+      <div class="swatch"><div class="fill" style="background:#EF4444"></div><div class="meta"><b>Destructive / Erro</b><code>#EF4444</code></div></div>
+      <div class="swatch"><div class="fill" style="background:#E6F8F0"></div><div class="meta"><b>Light Green (hover)</b><code>#E6F8F0</code></div></div>
+    </div>
+
+    <h2 class="sub">Cores de gráfico</h2>
+    <div class="grid">
+      <div class="swatch"><div class="fill" style="background:#F97316"></div><div class="meta"><b>Chart 1</b><code>#F97316</code></div></div>
+      <div class="swatch"><div class="fill" style="background:#14B8A6"></div><div class="meta"><b>Chart 2</b><code>#14B8A6</code></div></div>
+      <div class="swatch"><div class="fill" style="background:#1E3A5F"></div><div class="meta"><b>Chart 3</b><code>#1E3A5F</code></div></div>
+      <div class="swatch"><div class="fill" style="background:#FCD34D"></div><div class="meta"><b>Chart 4</b><code>#FCD34D</code></div></div>
+    </div>
+
+    <div class="note"><b>Modo escuro:</b> fora do escopo desta versão (v2.0). Ainda não existe uma decisão aprovada de como o dark mode deve se comportar na plataforma. Está planejado para uma versão futura.</div>
+  </div>
+
+  <div class="page" id="page-typography">
+    <div class="eyebrow">Fundamentos</div>
+    <h1>Tipografia</h1>
+    <p class="lead">Fonte única em toda a plataforma: <b>Exo 2</b>, pesos 300–800. Escala em rem, base 16px.</p>
+    <h2 class="sub">Escala em uso</h2>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 20px;">
+      <div class="type-row"><div class="label">Display / H1 · 36px · 800</div><div style="font-size:36px;font-weight:800;letter-spacing:-0.5px">Título principal</div></div>
+      <div class="type-row"><div class="label">H2 · 32px · 700</div><div style="font-size:32px;font-weight:700;letter-spacing:-0.5px">Título de seção</div></div>
+      <div class="type-row"><div class="label">H3 · 24px · 600</div><div style="font-size:24px;font-weight:600">Subtítulo</div></div>
+      <div class="type-row"><div class="label">H4 · 20px · 600</div><div style="font-size:20px;font-weight:600">Cabeçalho de card</div></div>
+      <div class="type-row"><div class="label">H5 / AppBar · 18px · 600</div><div style="font-size:18px;font-weight:600">Título de app bar</div></div>
+      <div class="type-row"><div class="label">Body Large · 16px · 400</div><div style="font-size:16px">Texto padrão de leitura, parágrafos e formulários.</div></div>
+      <div class="type-row"><div class="label">Body Medium · 14px · 400</div><div style="font-size:14px">Texto de tabela, labels de botão, itens de lista.</div></div>
+      <div class="type-row"><div class="label">Body Small / Muted · 12px · 400</div><div style="font-size:12px;color:var(--muted)">Legendas, textos auxiliares, timestamps.</div></div>
+      <div class="type-row"><div class="label">Label · 14px · 500</div><div style="font-size:14px;font-weight:500">Rótulo de campo de formulário</div></div>
+    </div>
+    <h2 class="sub">Escala (rem, base 16px)</h2>
+    <table>
+      <tr><th>Token</th><th>rem</th><th>px</th></tr>
+      <tr><td>xs</td><td>0.75rem</td><td>12px</td></tr>
+      <tr><td>sm</td><td>0.875rem</td><td>14px</td></tr>
+      <tr><td>base</td><td>1rem</td><td>16px</td></tr>
+      <tr><td>lg</td><td>1.125rem</td><td>18px</td></tr>
+      <tr><td>xl</td><td>1.25rem</td><td>20px</td></tr>
+      <tr><td>2xl</td><td>1.5rem</td><td>24px</td></tr>
+      <tr><td>3xl</td><td>1.875rem</td><td>30px</td></tr>
+      <tr><td>4xl</td><td>2.25rem</td><td>36px</td></tr>
+    </table>
+  </div>
+
+  <div class="page" id="page-spacing">
+    <div class="eyebrow">Fundamentos</div>
+    <h1>Espaçamento &amp; Radius</h1>
+    <h2 class="sub">Border radius</h2>
+    <table>
+      <tr><th>Token</th><th>Valor</th><th>Uso</th></tr>
+      <tr><td>lg</td><td>12.8px</td><td>Botões, cards, inputs, modais (padrão)</td></tr>
+      <tr><td>md</td><td>10.8px</td><td>Botões secundários/pequenos</td></tr>
+      <tr><td>sm</td><td>8.8px</td><td>Chips, badges</td></tr>
+    </table>
+    <h2 class="sub">Breakpoints responsivos</h2>
+    <table>
+      <tr><th>Nome</th><th>Largura</th></tr>
+      <tr><td>mobile</td><td>&lt; 600px</td></tr>
+      <tr><td>tablet</td><td>600–899px</td></tr>
+      <tr><td>desktop</td><td>900–1199px</td></tr>
+      <tr><td>large desktop</td><td>1200–1599px</td></tr>
+      <tr><td>tv / wide</td><td>≥ 1920px</td></tr>
+    </table>
+    <h2 class="sub">Elevação</h2>
+    <p class="spec">Cards e botões usam <code>elevation: 0</code> como padrão, contraste vem da borda de 1px, não de sombra. Modais/dialogs usam elevação 8 (única exceção).</p>
+  </div>
+
+  <div class="page" id="page-buttons">
+    <div class="eyebrow">Componentes</div>
+    <h1>Botões</h1>
+    <div class="note">No código real, botão sempre tem ícone junto do label (confirmado em <code>PrimaryButtonComponent</code>, usado com <code>icon: Icons.add</code>, <code>icon: Icons.check_outlined</code> etc.). Nunca usar só texto sem ícone.</div>
+    <h2 class="sub">Primário</h2>
+    <div class="comp-demo">
+      <button class="btn-primary"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px;vertical-align:-3px"><polyline points="20 6 9 17 4 12"/></svg>Salvar alterações</button>
+      <button class="btn-primary"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px;vertical-align:-3px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Adicionar Horário</button>
+      <button class="btn-disabled">Desabilitado</button>
+    </div>
+    <p class="spec">Altura 40px · fonte 14px/500 · radius 12.8px · elevação 0. Hover escurece o background 15%. Disabled: opacidade 50%.</p>
+
+    <h2 class="sub">Outline / Secundário (Cancelar)</h2>
+    <div class="comp-demo">
+      <button class="btn-outline">Cancelar</button>
+    </div>
+    <p class="spec">Borda e texto cinza, nunca vermelho. Confirmado idêntico nos dois produtos (<code>ModalAvisoComponent</code>).</p>
+
+    <h2 class="sub">Ícone de exclusão (cinza, vermelho sólido no hover)</h2>
+    <div class="comp-demo">
+      <button class="btn-icon-delete" title="Excluir"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button>
+      <span class="spec" style="margin:0">Usado pra remover um item de uma lista, sem confirmação prévia (ex: um horário adicionado por engano antes de salvar).</span>
+    </div>
+
+    <h2 class="sub">Lista expansível com exclusão por item (ajuste de ponto)</h2>
+    <p class="lead" style="margin-bottom:14px">Padrão real do ajuste de marcação de ponto: cada horário lançado tem um botão de excluir ao lado. Quando o número de marcações do dia fica ímpar (uma entrada sem saída correspondente), aparece um aviso pedindo justificativa.</p>
+    <div class="accordion" style="max-width:480px">
+      <div class="accordion-head" onclick="toggleAccordion(this)">Marcações de ponto, 12/06/2026 <span class="arrow">▾</span></div>
+      <div class="accordion-body">
+        <div class="punch-row"><span>08:02</span><button class="btn-icon-delete btn-icon-delete-sm" title="Excluir"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button></div>
+        <div class="punch-row"><span>12:00</span><button class="btn-icon-delete btn-icon-delete-sm" title="Excluir"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button></div>
+        <div class="punch-row"><span>13:15</span><button class="btn-icon-delete btn-icon-delete-sm" title="Excluir"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button></div>
+        <div class="punch-warning">⚠ O número de registros de ponto para este dia é ímpar. Para regularizar, envie uma justificativa.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page" id="page-inputs">
+    <div class="eyebrow">Componentes</div>
+    <h1>Campos de formulário</h1>
+    <h2 class="sub">Text field</h2>
+    <div class="comp-demo">
+      <div class="input-demo"><label>Nome completo</label><input placeholder="Digite seu nome"></div>
+      <div class="input-demo"><label>Campo em foco</label><input placeholder="Clique para focar"></div>
+    </div>
+    <p class="spec">Borda 1px padrão · foco: borda accent (#75C566) 2px · erro: borda destructive. Suporta prefixo/sufixo com ícone.</p>
+
+    <h2 class="sub">Campo somente leitura (formulário sem interação)</h2>
+    <p class="lead" style="margin-bottom:16px">Usado pra exibir dados que não são editáveis diretamente na tela, como cadastro de servidor/contribuinte. Mesmo formato visual do campo editável (label acima, caixa abaixo), mas a caixa não é um input: fundo lilás claro, sem cursor, sem estado de foco. Contexto completo de uso abaixo: cabeçalho de perfil + abas + campos.</p>
+
+    <div class="profile-header">
+      <div class="profile-photo"></div>
+      <div class="profile-info">
+        <b>DIEGO LOUREIRO</b>
+        <span><b>Celular:</b> (65) 99933-1680 &nbsp;&nbsp; <b>E-mail:</b> diego.loureiro@coplan.srv.br</span>
+      </div>
+      <button class="btn-primary">Solicitar Alteração</button>
+    </div>
+
+    <div class="tab-strip" id="profileTabStrip">
+      <button class="active" onclick="switchProfileTab(this,'cadastro')">Pessoal</button>
+      <button onclick="switchProfileTab(this,'vinculo')">Funcional</button>
+      <button onclick="switchProfileTab(this,'pagamento')">Pagamento</button>
+    </div>
+    <div class="tab-content-card">
+    <div class="readonly-grid" id="tab-cadastro">
+      <div>
+        <h3 class="readonly-section-title">Cadastro</h3>
+        <div class="readonly-field"><label>Nome</label><div class="readonly-value">DIEGO LOUREIRO</div></div>
+        <div class="readonly-field"><label>CPF</label><div class="readonly-value">103.506.188-01</div></div>
+        <div class="readonly-field"><label>Data de Nascimento</label><div class="readonly-value">01/09/2005</div></div>
+      </div>
+      <div>
+        <h3 class="readonly-section-title">Endereço</h3>
+        <div class="readonly-field"><label>CEP</label><div class="readonly-value">78450080</div></div>
+        <div class="readonly-field"><label>Logradouro</label><div class="readonly-value">RUA DOS FLAMBOYANTS</div></div>
+        <div class="readonly-field"><label>Número</label><div class="readonly-value">15</div></div>
+      </div>
+    </div>
+    <div class="readonly-grid" id="tab-vinculo" style="display:none">
+      <div>
+        <h3 class="readonly-section-title">Vínculo</h3>
+        <div class="readonly-field"><label>Formação</label><div class="readonly-value">EDUCAÇÃO SUPERIOR COMPLETA</div></div>
+        <div class="readonly-field"><label>Cargo</label><div class="readonly-value">245 - AGENTE ADMINISTRATIVO</div></div>
+      </div>
+      <div>
+        <h3 class="readonly-section-title">Dependentes</h3>
+        <div class="readonly-expand" id="readonlyExpand" onclick="toggleReadonlyExpand()">
+          <div class="readonly-expand-head"><span>LIVIA GIANOTO SGOTTE</span><span class="chev">▾</span></div>
+          <div class="readonly-expand-body" id="readonlyExpandBody">
+            <span><b>Parentesco:</b> Filho(a)</span>
+            <span><b>Data Nascimento:</b> 05/12/2005</span>
+            <span><b>Idade:</b> 20</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="readonly-grid" id="tab-pagamento" style="display:none">
+      <div>
+        <h3 class="readonly-section-title">Recebimento</h3>
+        <div class="readonly-field"><label>Banco</label><div class="readonly-value">237 - BANCO BRADESCO S.A.</div></div>
+        <div class="readonly-field"><label>Agência</label><div class="readonly-value">1637</div></div>
+        <div class="readonly-field"><label>Conta</label><div class="readonly-value">13093</div></div>
+      </div>
+    </div>
+    </div>
+    <p class="spec">Fundo <code>#EEF1FA</code> (lilás claro), texto em negrito, radius 12.8px igual ao input editável, sem borda de foco porque não recebe interação. Abas seguem o padrão verde sólido já documentado em Tabelas.</p>
+  </div>
+
+  <div class="page" id="page-cards">
+    <div class="eyebrow">Componentes</div>
+    <h1>Cards</h1>
+    <div class="comp-demo">
+      <div class="card-demo">
+        <b style="font-size:16px">Contrato nº 042/2026</b>
+        <p style="font-size:13px;color:var(--muted);margin:8px 0 0">Padding adaptativo: 8px (&lt;350px), 16px padrão. Borda 1px, radius 12.8px, sem elevação.</p>
+      </div>
+      <div class="accordion">
+        <div class="accordion-head" onclick="toggleAccordion(this)">Item de accordion <span class="arrow">▾</span></div>
+        <div class="accordion-body">Usado em listas expansíveis: contratos, ATAs, protocolos. Clique no cabeçalho para expandir.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== TABELAS ===================== -->
+  <div class="page" id="page-tables">
+    <div class="eyebrow">Componentes</div>
+    <h1>Tabelas</h1>
+    <p class="lead">Catálogo completo de padrões de tabela usados na plataforma. Cada variação abaixo é interativa, clique para testar o comportamento real.</p>
+
+    <div class="tab-strip">
+      <button class="active" data-tbl="basic">Padrão</button>
+      <button data-tbl="sortable">Ordenável</button>
+      <button data-tbl="search">Com busca</button>
+      <button data-tbl="selection">Seleção em massa</button>
+      <button data-tbl="expand">Expansível</button>
+      <button data-tbl="paginated">Paginação</button>
+      <button data-tbl="states">Estados</button>
+    </div>
+
+    <!-- Padrão -->
+    <div class="tbl-section active" id="tbl-basic">
+      <div class="tbl-wrap">
+        <table>
+          <tr><th>Contribuinte</th><th>CPF/CNPJ</th><th>Status</th><th>Valor</th></tr>
+          <tr class="tbl-row"><td>Maria Souza</td><td>123.***.***-00</td><td><span class="status-chip status-active">Ativo</span></td><td>R$ 1.240,00</td></tr>
+          <tr class="tbl-row" style="background:#FAFBFE"><td>João Pereira</td><td>456.***.***-00</td><td><span class="status-chip status-pending">Pendente</span></td><td>R$ 890,00</td></tr>
+          <tr class="tbl-row"><td>Ana Lima</td><td>789.***.***-00</td><td><span class="status-chip status-error">Vencido</span></td><td>R$ 2.100,00</td></tr>
+        </table>
+      </div>
+      <p class="spec">Header 48px · linha 56px (100px em modo formulário) · zebra stripe opcional · scroll horizontal em tabelas largas · largura de coluna proporcional.</p>
+    </div>
+
+    <!-- Ordenável -->
+    <div class="tbl-section" id="tbl-sortable">
+      <div class="tbl-wrap">
+        <table id="sortTable">
+          <tr>
+            <th class="sortable active" data-col="0" data-dir="asc">Nome <span class="arrow">▾</span></th>
+            <th class="sortable" data-col="1">Valor <span class="arrow">▾</span></th>
+            <th class="sortable" data-col="2">Data <span class="arrow">▾</span></th>
+          </tr>
+          <tbody id="sortBody">
+            <tr class="tbl-row"><td>Contrato 018</td><td data-v="4200">R$ 4.200,00</td><td data-v="20260302">02/03/2026</td></tr>
+            <tr class="tbl-row"><td>Contrato 042</td><td data-v="1850">R$ 1.850,00</td><td data-v="20260115">15/01/2026</td></tr>
+            <tr class="tbl-row"><td>Contrato 007</td><td data-v="9900">R$ 9.900,00</td><td data-v="20260620">20/06/2026</td></tr>
+            <tr class="tbl-row"><td>Contrato 031</td><td data-v="650">R$ 650,00</td><td data-v="20260410">10/04/2026</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="spec">Clique no cabeçalho da coluna para ordenar. A seta indica a direção ativa.</p>
+    </div>
+
+    <!-- Busca -->
+    <div class="tbl-section" id="tbl-search">
+      <div class="tbl-toolbar">
+        <input class="tbl-search" id="tblFilterInput" placeholder="Buscar por nome..." oninput="filterTable()">
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <tbody id="filterBody">
+            <tr class="tbl-row" data-name="maria souza"><td>Maria Souza</td><td>IPTU 2026</td><td><span class="status-chip status-active">Em dia</span></td></tr>
+            <tr class="tbl-row" data-name="joão pereira"><td>João Pereira</td><td>ISS 2025</td><td><span class="status-chip status-pending">Pendente</span></td></tr>
+            <tr class="tbl-row" data-name="carlos mendes"><td>Carlos Mendes</td><td>Taxa de Licença</td><td><span class="status-chip status-error">Vencido</span></td></tr>
+            <tr class="tbl-row" data-name="ana lima"><td>Ana Lima</td><td>IPTU 2026</td><td><span class="status-chip status-active">Em dia</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="spec" id="filterEmpty" style="display:none">Nenhum resultado encontrado para essa busca.</p>
+    </div>
+
+    <!-- Seleção em massa -->
+    <div class="tbl-section" id="tbl-selection">
+      <div class="bulkbar" id="bulkBar">
+        <span><b id="bulkCount">0</b> selecionado(s)</span>
+        <button onclick="clearSelection()">Exportar selecionados</button>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <tr><th style="width:36px"><input type="checkbox" id="selectAll" onclick="toggleAll(this)"></th><th>Servidor</th><th>Matrícula</th><th>Status</th></tr>
+          <tbody id="selectBody">
+            <tr class="tbl-row"><td><input type="checkbox" onclick="toggleRow(this)"></td><td>Fernanda Costa</td><td>00214</td><td><span class="status-chip status-active">Ativo</span></td></tr>
+            <tr class="tbl-row"><td><input type="checkbox" onclick="toggleRow(this)"></td><td>Roberto Alves</td><td>00389</td><td><span class="status-chip status-active">Ativo</span></td></tr>
+            <tr class="tbl-row"><td><input type="checkbox" onclick="toggleRow(this)"></td><td>Patrícia Ramos</td><td>00157</td><td><span class="status-chip status-pending">Licença</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="spec">Selecionar linhas revela a barra de ações em massa com animação de altura.</p>
+    </div>
+
+    <!-- Expansível -->
+    <div class="tbl-section" id="tbl-expand">
+      <div class="tbl-wrap">
+        <table>
+          <tr><th></th><th>Contrato</th><th>Fornecedor</th><th>Valor total</th></tr>
+          <tbody>
+            <tr class="tbl-row" onclick="toggleExpand(this,'exp1')">
+              <td><span class="expand-toggle" id="tog-exp1"><span class="chev">▶</span></span></td><td>042/2026</td><td>Construtora Alfa</td><td>R$ 180.000,00</td>
+            </tr>
+            <tr class="expand-row"><td colspan="4">
+              <div class="expand-content" id="exp1">
+                <b style="font-size:12.5px">Itens do contrato</b>
+                <p style="font-size:12.5px;color:var(--muted);margin:6px 0 0">3 itens · 2 aditivos · vigência até 12/2026 · fiscal: Eng. Marcos Silva</p>
+              </div>
+            </td></tr>
+            <tr class="tbl-row" onclick="toggleExpand(this,'exp2')" style="background:#FAFBFE">
+              <td><span class="expand-toggle" id="tog-exp2"><span class="chev">▶</span></span></td><td>018/2025</td><td>Serviços Beta Ltda</td><td>R$ 64.500,00</td>
+            </tr>
+            <tr class="expand-row"><td colspan="4">
+              <div class="expand-content" id="exp2">
+                <b style="font-size:12.5px">Itens do contrato</b>
+                <p style="font-size:12.5px;color:var(--muted);margin:6px 0 0">1 item · sem aditivos · vigência até 08/2025 · fiscal: Sra. Camila Duarte</p>
+              </div>
+            </td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="spec">Clique na linha para expandir detalhes sem navegar para outra tela. Usado em contratos, ATAs e protocolos.</p>
+    </div>
+
+    <!-- Paginação -->
+    <div class="tbl-section" id="tbl-paginated">
+      <h2 class="sub" style="margin-top:0">Simples · poucas páginas, telas de listagem direta</h2>
+      <p class="spec">Do código real (<code>PaginationControlsComponent</code>). Botões com texto em vez de números: Primeira/Anterior em outline, Próxima/Última sólidos na cor primária.</p>
+      <div class="tbl-wrap" style="padding:14px">
+        <div class="pag-simple">
+          <span class="pag-simple-label">Página 2 de 5</span>
+          <div class="pag-simple-controls">
+            <button class="pag-btn-outline">« Primeira</button>
+            <button class="pag-btn-outline">‹ Anterior</button>
+            <button class="pag-btn-solid">Próxima ›</button>
+            <button class="pag-btn-solid">Última »</button>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="sub">Longa · listas extensas com muitos registros</h2>
+      <p class="spec">Números de página clicáveis + seletor de quantidade por página. Usar quando o total de páginas for grande o suficiente para que "Próxima/Última" sozinhos atrapalhem a navegação.</p>
+      <div class="tbl-wrap">
+        <table id="pagTable">
+          <tr><th style="width:32px"></th><th>Documento</th><th>Data</th><th>Tipo</th><th>Assinantes</th><th>Status</th><th></th></tr>
+          <tbody id="pagBody"></tbody>
+        </table>
+        <div class="pag-footer">
+          <div class="pag-info">
+            <span id="pagSummary">Página 1 de 4 | 35 Registros Encontrados</span>
+            <span class="pag-size-selector">
+              Registros por página:
+              <select id="pagSize" onchange="changePageSize()">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+              </select>
+            </span>
+          </div>
+          <div class="pagination" id="pagControls"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estados -->
+    <div class="tbl-section" id="tbl-states">
+      <div class="tbl-toolbar">
+        <button class="btn-sm active" onclick="setTableState('loading', this)">Carregando</button>
+        <button class="btn-sm" onclick="setTableState('empty', this)">Vazio</button>
+        <button class="btn-sm" onclick="setTableState('data', this)">Com dados</button>
+      </div>
+      <div class="tbl-wrap" id="stateContainer">
+        <table>
+          <tr><th>Item</th><th>Status</th><th>Valor</th></tr>
+          <tbody id="stateBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!-- =================== FIM TABELAS =================== -->
+
+  <div class="page" id="page-icons">
+    <div class="eyebrow">Componentes</div>
+    <h1>Ícones</h1>
+    <p class="lead">Todos os ícones da plataforma são <a href="https://lucide.dev/" target="_blank"><b>Lucide</b></a>, verificados direto no código-fonte real. Nunca redesenhar um ícone: usar o link ao lado de cada um para pegar o SVG/componente oficial (<code>lucide-react</code> para React).</p>
+
+    <h2 class="sub">Navegação e ações comuns</h2>
+    <table>
+      <tr><th>Uso</th><th>Ícone Lucide</th><th>Link</th></tr>
+      <tr><td>Busca (cabeçalho)</td><td><code>search</code></td><td><a href="https://lucide.dev/icons/search" target="_blank">lucide.dev/icons/search</a></td></tr>
+      <tr><td>Notificações</td><td><code>bell</code> (arquivo no código: <code>notification.svg</code>)</td><td><a href="https://lucide.dev/icons/bell" target="_blank">lucide.dev/icons/bell</a></td></tr>
+      <tr><td>Fechar (modal, toast)</td><td><code>x</code></td><td><a href="https://lucide.dev/icons/x" target="_blank">lucide.dev/icons/x</a></td></tr>
+      <tr><td>Recolher/expandir sidebar</td><td>arquivos no código: <code>panel_left_open.svg</code> / <code>panel_right_open.svg</code></td><td><a href="https://lucide.dev/icons/panel-left" target="_blank">lucide.dev/icons/panel-left</a></td></tr>
+      <tr><td>Editar</td><td><code>pencil</code></td><td><a href="https://lucide.dev/icons/pencil" target="_blank">lucide.dev/icons/pencil</a></td></tr>
+      <tr><td>Excluir</td><td><code>trash-2</code></td><td><a href="https://lucide.dev/icons/trash-2" target="_blank">lucide.dev/icons/trash-2</a></td></tr>
+      <tr><td>Upload de anexo</td><td><code>upload</code></td><td><a href="https://lucide.dev/icons/upload" target="_blank">lucide.dev/icons/upload</a></td></tr>
+      <tr><td>Adicionar item</td><td><code>plus</code></td><td><a href="https://lucide.dev/icons/plus" target="_blank">lucide.dev/icons/plus</a></td></tr>
+      <tr><td>Mostrar/ocultar senha</td><td><code>eye</code> / <code>eye-off</code></td><td><a href="https://lucide.dev/icons/eye-off" target="_blank">lucide.dev/icons/eye-off</a></td></tr>
+      <tr><td>Paginação (anterior/próxima)</td><td><code>chevron-left</code> / <code>chevron-right</code></td><td><a href="https://lucide.dev/icons/chevron-right" target="_blank">lucide.dev/icons/chevron-right</a></td></tr>
+      <tr><td>Paginação (primeira/última)</td><td><code>chevrons-left</code> / <code>chevrons-right</code></td><td><a href="https://lucide.dev/icons/chevrons-right" target="_blank">lucide.dev/icons/chevrons-right</a></td></tr>
+    </table>
+
+    <h2 class="sub">Feedback</h2>
+    <table>
+      <tr><th>Uso</th><th>Ícone Lucide</th><th>Link</th></tr>
+      <tr><td>Toast de sucesso</td><td><code>check-circle</code></td><td><a href="https://lucide.dev/icons/check-circle" target="_blank">lucide.dev/icons/check-circle</a></td></tr>
+      <tr><td>Toast de erro</td><td><code>circle-alert</code></td><td><a href="https://lucide.dev/icons/circle-alert" target="_blank">lucide.dev/icons/circle-alert</a></td></tr>
+      <tr><td>Toast informativo</td><td><code>info</code></td><td><a href="https://lucide.dev/icons/info" target="_blank">lucide.dev/icons/info</a></td></tr>
+    </table>
+
+    <h2 class="sub">Menu principal (referência completa)</h2>
+    <p class="spec">Ver tabela completa de ícones do menu lateral na página <a href="#" onclick="document.querySelector('[data-page=navigation]').click();return false;">Navegação / Sidebar</a>.</p>
+
+    <div class="note">Nomes de arquivo no código Flutter usam <code>snake_case</code> (ex: <code>dollar_sign.svg</code>); o nome oficial Lucide correspondente usa <code>kebab-case</code> (ex: <code>dollar-sign</code>). São o mesmo ícone, só convenção de nome diferente entre plataformas.</div>
+  </div>
+
+  <div class="page" id="page-navigation">
+    <div class="eyebrow">Componentes</div>
+    <h1>Navegação / Sidebar</h1>
+    <p class="lead">Estrutura de shell usada em todos os portais logados: cabeçalho fixo, sidebar de navegação recolhível e rodapé institucional. Clique no botão de recolher no cabeçalho para ver a transição. Clique no seletor de unidade gestora para ver o painel de troca.</p>
+
+    <div class="note"><b>Convenção de hover:</b> elementos de navegação e seleção (item de sidebar, seletor de unidade gestora, linha de um painel de opções) ficam verde sólido (<code>#75C566</code>, texto branco) ao passar o mouse ou quando ativos. Linhas de tabela usam um verde suave (<code>#EAF7EE</code>) no hover, porque um verde sólido em cima de dados e chips de status prejudica a leitura. Botões de ação primária/secundária mantêm seu próprio hover (escurecer/cinza), não usam verde.</div>
+
+    <div class="shell-demo">
+      <div class="shell-topbar-strip"></div>
+      <div class="shell-topbar">
+        <div class="shell-brand" id="shellBrand">
+          <div class="shell-logo"><svg id="Camada_1" data-name="Camada 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2932.78 2038.08">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #75c566;
+      }
+    </style>
+  </defs>
+  <path class="cls-1" d="M1619.26,1065.38c62.83-124.6,120.94-243.44,177.48-364.89,37.17-79.05,72.76-151.83,108.37-223.55,65.44-129.83,195.27-214.65,335.06-215.18,117.8,0,227.73,40.84,309.92,115.18,78,70.15,120.94,163.34,120.94,261.76v760.68c0,207.84-193.18,376.94-430.86,376.94-117.79,0-227.74-40.83-309.93-115.18-78-70.15-120.93-163.33-120.93-261.76v-24.61l-184.28,318.83c32.98,59.68,76.96,114.12,129.83,161.77,129.83,117.79,302.07,182.71,485.31,182.71,381.65,0,692.62-286.36,692.62-638.7v-760.68c0-173.28-73.82-335.58-207.32-455.99C2595.64,64.92,2423.39,0,2235.44,0c-234.01,1.05-454.94,142.4-563.84,359.67-37.17,73.29-73.81,148.68-112.03,229.82-86.38,185.85-176.96,364.89-282.18,572.74-50.27,99.47-103.14,204.7-160.19,318.82-50.79,101.56-128.8,183.76-219.36,230.35-64.92,32.98-131.93,48.69-200.51,46.07-202.09-7.33-383.22-171.19-435.57-391.6v-696.81c0-224.59,182.71-407.3,407.3-407.3h308.87V0h-308.87C299.98,0,0,299.98,0,669.07v725.09l2.62,13.61c72.77,342.38,361.23,599.96,685.29,611.47,114.13,4.19,224.59-21.47,329.29-75.38,134.03-68.58,243.45-178.53,319.88-318.83,5.24-8.89,9.94-17.8,14.66-27.22,56.54-113.61,109.41-218.31,159.67-317.26,37.7-74.86,73.29-146.06,107.84-215.16Z"/>
+</svg></div>
+          <div class="shell-brand-text"><b>Portal do Produto</b><span>Unidade Gestora</span></div>
+        </div>
+        <button class="shell-collapse-btn" id="shellCollapseBtn" onclick="toggleShellSidebar()" title="Fechar Menu"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="collapseIcon"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><path d="M14 9l-2 3 2 3" id="collapseArrow"/></svg></button>
+        <div class="shell-search"><span>🔍</span> O que você procura? <kbd>⌘K</kbd></div>
+        <div class="shell-org" id="shellOrg" onclick="toggleOrgPanel()">
+          <div class="shell-org-icon"></div>
+          <div class="shell-org-text"><b>Prefeitura Municipal</b><span>Matrícula: 0000.0</span></div>
+          <span class="shell-chevron">▾</span>
+          <div class="shell-org-panel" id="shellOrgPanel">
+            <b class="panel-title">Mudar Matrícula</b>
+            <div class="shell-org-row">
+              <div><b>Unidade Gestora:</b> Prefeitura Municipal</div>
+              <div><b>Cargo Função:</b> 245 – Agente Administrativo</div>
+              <div><b>Número Matrícula:</b> 0000.0</div>
+              <div><b>Status:</b> <span class="status-pill">Exercício</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="shell-bell"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></div>
+        <div class="shell-avatar"></div>
+      </div>
+      <div class="shell-body">
+        <div class="shell-sidebar" id="shellSidebar">
+          <div class="shell-nav-item active" title="Início"><span class="shell-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5"/></svg></span><span class="shell-label">Início</span></div>
+          <div class="shell-nav-item" title="Meus Dados"><span class="shell-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg></span><span class="shell-label">Meus Dados</span></div>
+          <div class="shell-nav-item" title="Financeiro"><span class="shell-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span><span class="shell-label">Financeiro</span></div>
+          <div class="shell-nav-item" title="Férias"><span class="shell-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="m9 15 2 2 4-4"/></svg></span><span class="shell-label">Férias</span></div>
+          <div class="shell-nav-item" title="Licença Prêmio"><span class="shell-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.5 13.5 17 22l-5-3-5 3 1.5-8.5"/></svg></span><span class="shell-label">Licença Prêmio</span></div>
+          <div class="shell-nav-item" title="Ponto"><span class="shell-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 16 14"/></svg></span><span class="shell-label">Ponto</span></div>
+          <div class="shell-nav-item" title="Afastamento"><span class="shell-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21v-1a6 6 0 0 1 6-6h2a6 6 0 0 1 3 .8"/><line x1="17" y1="8" x2="22" y2="13"/><line x1="22" y1="8" x2="17" y2="13"/></svg></span><span class="shell-label">Afastamento</span></div>
+          <div class="shell-nav-item" title="Atestado"><span class="shell-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2"/><path d="M9 12h6"/><path d="M9 16h4"/></svg></span><span class="shell-label">Atestado</span></div>
+          <div class="shell-nav-item" title="Diárias"><span class="shell-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13l1.5-5A2 2 0 0 1 6.4 6.5h11.2A2 2 0 0 1 19.5 8l1.5 5"/><rect x="2" y="13" width="20" height="5" rx="1.5"/><circle cx="7" cy="18" r="1.5"/><circle cx="17" cy="18" r="1.5"/></svg></span><span class="shell-label">Diárias</span></div>
+          <div class="shell-nav-item" title="Adiantamento"><span class="shell-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="2" y1="12" x2="22" y2="12"/></svg></span><span class="shell-label">Adiantamento</span></div>
+        </div>
+        <div class="shell-content">
+          <h2 style="margin:0 0 6px;color:var(--primary);font-size:22px">Olá, Usuário</h2>
+          <p style="color:var(--muted);font-size:13.5px;margin:0 0 18px">Bem-vindo ao seu portal.</p>
+          <div class="shell-cards">
+            <div class="shell-card"><span class="shell-card-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg></span>Meus Dados</div>
+            <div class="shell-card"><span class="shell-card-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>Financeiro</div>
+            <div class="shell-card"><span class="shell-card-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="m9 15 2 2 4-4"/></svg></span>Férias</div>
+          </div>
+        </div>
+      </div>
+      <div class="shell-footer">
+        <span>© 2026 Coplan Tecnologia. Todos os direitos reservados.</span>
+        <span class="shell-footer-links">Política de Privacidade &nbsp; Termos de Uso &nbsp; Sobre &nbsp;&nbsp; <b>Download na App Store</b> &nbsp; <b>Disponível no Google Play</b></span>
+      </div>
+    </div>
+
+    <h2 class="sub">Especificação</h2>
+    <table>
+      <tr><th>Elemento</th><th>Valor</th></tr>
+      <tr><td>Sidebar expandida</td><td>largura ~260px, item com ícone + label</td></tr>
+      <tr><td>Sidebar recolhida</td><td>largura ~64px, ícone apenas, com tooltip flutuante (fundo branco, texto preto, sombra) mostrando o label ao passar o mouse</td></tr>
+      <tr><td>Item ativo/hover</td><td>fundo accent (#75C566) sólido, texto e ícone brancos, radius 8px, transição 150ms</td></tr>
+      <tr><td>Busca no cabeçalho</td><td>campo com placeholder + atalho de teclado (⌘K) alinhado à direita</td></tr>
+      <tr><td>Seletor de unidade gestora</td><td>ícone + nome + identificador secundário (matrícula/código) + chevron</td></tr>
+      <tr><td>Rodapé</td><td>copyright + links institucionais + selos de loja de app, padrão em todos os produtos</td></tr>
+    </table>
+    <p class="spec">Rótulo do produto e do módulo de navegação variam por sistema; a estrutura, cores e comportamento de recolhimento são fixos.</p>
+
+    <h2 class="sub">Ícones do menu (referência exata)</h2>
+    <table>
+      <tr><th>Item</th><th>Ícone Lucide</th><th>Link</th></tr>
+      <tr><td>Início</td><td><code>house</code></td><td><a href="https://lucide.dev/icons/house" target="_blank">lucide.dev/icons/house</a></td></tr>
+      <tr><td>Meus Dados</td><td><code>user</code></td><td><a href="https://lucide.dev/icons/user" target="_blank">lucide.dev/icons/user</a></td></tr>
+      <tr><td>Financeiro</td><td><code>dollar-sign</code></td><td><a href="https://lucide.dev/icons/dollar-sign" target="_blank">lucide.dev/icons/dollar-sign</a></td></tr>
+      <tr><td>Férias</td><td><code>calendar-check</code></td><td><a href="https://lucide.dev/icons/calendar-check" target="_blank">lucide.dev/icons/calendar-check</a></td></tr>
+      <tr><td>Licença Prêmio</td><td><code>award</code></td><td><a href="https://lucide.dev/icons/award" target="_blank">lucide.dev/icons/award</a></td></tr>
+      <tr><td>Ponto</td><td><code>clock</code></td><td><a href="https://lucide.dev/icons/clock" target="_blank">lucide.dev/icons/clock</a></td></tr>
+      <tr><td>Afastamento</td><td><code>user-x</code></td><td><a href="https://lucide.dev/icons/user-x" target="_blank">lucide.dev/icons/user-x</a></td></tr>
+      <tr><td>Atestado</td><td><code>clipboard-paste</code></td><td><a href="https://lucide.dev/icons/clipboard-paste" target="_blank">lucide.dev/icons/clipboard-paste</a></td></tr>
+      <tr><td>Diárias</td><td><code>car</code></td><td><a href="https://lucide.dev/icons/car" target="_blank">lucide.dev/icons/car</a></td></tr>
+      <tr><td>Adiantamento</td><td><code>briefcase</code></td><td><a href="https://lucide.dev/icons/briefcase" target="_blank">lucide.dev/icons/briefcase</a></td></tr>
+    </table>
+    <p class="spec">Nomes conferidos direto no código-fonte real (arquivo <code>mock.dart</code>, lista <code>itemsRh</code>). Cada produto tem seu próprio conjunto de módulos, mas todos seguem essa mesma fonte: nome exato do ícone Lucide, verificável no link.</p>
+  </div>
+
+  <div class="page" id="page-feedback">
+    <div class="eyebrow">Componentes</div>
+    <h1>Feedback &amp; Status</h1>
+    <h2 class="sub">Status chips</h2>
+    <div class="comp-demo">
+      <span class="status-chip status-active">Ativo</span>
+      <span class="status-chip status-pending">Pendente</span>
+      <span class="status-chip status-error">Vencido</span>
+    </div>
+    <h2 class="sub">Toast</h2>
+    <p class="spec">Canto superior direito, entra com slide da direita + fade, some com a animação reversa. Título 24px negrito branco, mensagem 16px/600 branca, botão fechar (✕) branco. Some sozinho após alguns segundos ou ao clicar no ✕. Clique nos botões abaixo para disparar de verdade.</p>
+    <div class="comp-demo">
+      <button class="btn-sm" onclick="fireToast('success')">Disparar sucesso</button>
+      <button class="btn-sm" onclick="fireToast('error')">Disparar erro</button>
+      <button class="btn-sm" onclick="fireToast('info')">Disparar informativo</button>
+    </div>
+    <table>
+      <tr><th>Tipo</th><th>Cor de fundo</th><th>Ícone</th></tr>
+      <tr><td>success</td><td><code>#75C566</code> (accent)</td><td><code>check-circle</code></td></tr>
+      <tr><td>error</td><td><code>#EF4444</code> (destructive)</td><td><code>circle-alert</code></td></tr>
+      <tr><td>info</td><td><code>#1F4993</code> (primary)</td><td><code>info</code></td></tr>
+    </table>
+  </div>
+
+  <div class="page" id="page-confirm">
+    <div class="eyebrow">Componentes</div>
+    <h1>Confirmação (Cancelar / Confirmar)</h1>
+    <p class="lead">Modal usado antes de qualquer ação destrutiva ou irreversível. Overlay escuro cobrindo a tela toda, card centralizado. Clique no botão abaixo para ver de verdade.</p>
+    <div class="comp-demo">
+      <button class="btn-primary" onclick="showConfirmModal()">Testar modal de confirmação</button>
+    </div>
+    <table>
+      <tr><th>Elemento</th><th>Valor</th></tr>
+      <tr><td>Overlay</td><td>preto a 50% de opacidade, cobre a tela inteira</td></tr>
+      <tr><td>Card</td><td>largura máx. 500px, radius 12px, sombra suave</td></tr>
+      <tr><td>Ícone (opcional)</td><td>círculo com fundo na cor do ícone a 10% de opacidade, ícone 32px na cor cheia</td></tr>
+      <tr><td>Título</td><td>20px, negrito</td></tr>
+      <tr><td>Mensagem</td><td>16px, cinza, altura de linha 1.4</td></tr>
+      <tr><td>Botão Cancelar</td><td>outline, borda cinza, texto cinza, radius 8px, 100px de largura</td></tr>
+      <tr><td>Botão Confirmar</td><td>primário (verde/accent), radius 8px, 100px de largura</td></tr>
+    </table>
+  </div>
+
+  <div class="page" id="page-domain">
+    <div class="eyebrow">Escopo</div>
+    <h1>Componentes de domínio</h1>
+    <p class="lead">Estes componentes carregam regra de negócio específica de cada módulo e não são cobertos por este catálogo visual, precisam de especificação funcional própria.</p>
+    <table>
+      <tr><th>Módulo</th><th>Componentes</th></tr>
+      <tr><td>Contratos</td><td>detalhe, itens, NADs, anexos, status, lista expansível</td></tr>
+      <tr><td>ATA de Registro de Preço</td><td>detalhe, itens, resumo, lista expansível</td></tr>
+      <tr><td>Certidões / Tributário</td><td>geração de certidão, detalhe, lista, perfil do contribuinte</td></tr>
+      <tr><td>NFS-e / Débitos</td><td>detalhe de nota, débitos em aberto, histórico de pagamento</td></tr>
+      <tr><td>RH / Ponto</td><td>registro de ponto, ajuste, período aquisitivo, diárias, afastamento</td></tr>
+      <tr><td>Protocolo / Orçamento</td><td>nova apresentação, resposta de cotação, filtro de documento</td></tr>
+    </table>
+  </div>
+
+  <div class="page" id="page-auth-login">
+    <div class="eyebrow">Padrões de tela</div>
+    <h1>Login</h1>
+    <p class="lead">Cabeçalho de página padrão (título + subtítulo + Voltar) acima de um card central com identidade do cliente, formulário de CPF/CNPJ e senha, opção de lembrar credenciais e atalhos para recuperação e primeiro acesso.</p>
+    <div class="pattern-header" style="margin-bottom:20px">
+      <div>
+        <h2 style="font-size:24px">Acesso ao Portal</h2>
+        <p>Serviços e informações para o usuário.</p>
+      </div>
+      <button class="btn-ghost">‹ Voltar</button>
+    </div>
+    <div class="comp-demo" style="justify-content:center">
+      <div class="card-demo" style="width:340px">
+        <div style="text-align:center;margin-bottom:16px">
+          <div style="width:48px;height:48px;border-radius:50%;background:var(--mutedbg);margin:0 auto 8px"></div>
+          <b style="font-size:14px">Nome do Sistema</b>
+        </div>
+        <p style="font-size:13px;font-weight:700;text-align:center;margin-bottom:16px">Utilize seu CPF e Senha para continuar.</p>
+        <div class="input-demo" style="width:100%;margin-bottom:10px"><label>CPF</label><input placeholder="000.000.000-00"></div>
+        <div class="input-demo" style="width:100%;margin-bottom:6px"><label>Senha</label><input type="password" placeholder="••••••••"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <label style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted)"><input type="checkbox" style="margin:0">Lembrar-me</label>
+          <button class="btn-ghost" style="height:auto;padding:4px 8px;font-size:12px">Esqueceu seu Login e Senha?</button>
+        </div>
+        <button class="btn-primary" style="width:100%;margin-bottom:8px">Continuar</button>
+        <button class="btn-ghost" style="width:100%">Primeiro Acesso?</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="page" id="page-auth-recovery">
+    <div class="eyebrow">Padrões de tela</div>
+    <h1>Recuperar senha</h1>
+    <p class="lead">Fluxo em 5 etapas, apresentado em modal com botão de fechar no canto superior direito.</p>
+    <table>
+      <tr><th>#</th><th>Etapa</th><th>O que acontece</th></tr>
+      <tr><td>1</td><td>CPF/CNPJ</td><td>Informar documento para iniciar recuperação</td></tr>
+      <tr><td>2</td><td>Canal de envio</td><td>Escolher canal de envio do código (email/SMS)</td></tr>
+      <tr><td>3</td><td>Validar código</td><td>Inserir código recebido</td></tr>
+      <tr><td>4</td><td>Definir senha</td><td>Cadastrar nova senha</td></tr>
+      <tr><td>5</td><td>Sucesso</td><td>Confirmação</td></tr>
+    </table>
+    <div class="comp-demo" style="justify-content:center;margin-top:16px">
+      <div class="card-demo" style="width:320px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:10px">
+          <b style="color:var(--primary);font-size:16px">Recuperar Senha</b>
+          <span style="color:var(--muted);cursor:pointer">✕</span>
+        </div>
+        <p style="font-size:12.5px;color:var(--muted);margin-bottom:14px">Informe o CPF ou CNPJ para iniciar a recuperação de senha.</p>
+        <div class="input-demo" style="width:100%;margin-bottom:14px"><label>CPF ou CNPJ</label><input placeholder="000.000.000-00"></div>
+        <button class="btn-primary" style="width:100%">Continuar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="page" id="page-auth-firstaccess">
+    <div class="eyebrow">Padrões de tela</div>
+    <h1>Primeiro acesso</h1>
+    <p class="lead">Reaproveita a mesma estrutura de 5 etapas da recuperação de senha. Não é um cadastro livre: valida identidade de um cidadão/servidor já existente na base, sempre a partir de um CPF/CNPJ pré-cadastrado.</p>
+  </div>
+
+  <div class="page" id="page-auth-error">
+    <div class="eyebrow">Padrões de tela</div>
+    <h1>Erro / Sessão expirada</h1>
+    <p class="lead">Ao cair em rota inválida ou sessão expirada, a sessão local é encerrada e o usuário é redirecionado ao login. Rotas inexistentes têm variante para usuário autenticado e não autenticado.</p>
+    <div class="comp-demo" style="justify-content:center">
+      <div class="card-demo" style="width:320px;text-align:center">
+        <b style="font-size:16px">Página não encontrada</b>
+        <p style="font-size:12.5px;color:var(--muted);margin:10px 0 16px">Sua sessão pode ter expirado ou o endereço não existe mais.</p>
+        <button class="btn-primary" style="width:100%">Voltar ao login</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="page" id="page-page-pattern">
+    <div class="eyebrow">Padrões de tela</div>
+    <h1>Padrão de página interna</h1>
+    <p class="lead">Cabeçalho usado em toda página de módulo (Financeiro, Afastamento, Licença Prêmio, Diárias, Ponto, Configurações). Componente real: <code>HeaderPageComponent</code>. Título grande na cor primária à esquerda, botão outline "Voltar" à direita, conteúdo do módulo abaixo.</p>
+    <div class="pattern-demo">
+      <div class="pattern-header">
+        <div>
+          <h2>Solicitações de Férias</h2>
+          <p>Acompanhe e solicite seus períodos de férias.</p>
+        </div>
+        <button class="btn-ghost pattern-back">‹ Voltar ao Início</button>
+      </div>
+      <div class="pattern-body">
+        <div class="card-demo" style="width:100%;max-width:none">
+          <b style="font-size:15px">Período disponível: 30 dias</b>
+          <p style="font-size:13px;color:var(--muted);margin:8px 0 0">Referente ao período aquisitivo 2025/2026. Nenhuma solicitação em andamento.</p>
+        </div>
+      </div>
+    </div>
+    <h2 class="sub">Especificação</h2>
+    <table>
+      <tr><th>Elemento</th><th>Valor</th></tr>
+      <tr><td>Título</td><td>cor primary, fonte display (escala 4xl/5xl conforme tela), 1 linha, corta com reticências se necessário</td></tr>
+      <tr><td>Subtítulo</td><td>opcional, cinza, abaixo do título</td></tr>
+      <tr><td>Botão de voltar</td><td>fantasma (sem borda, fundo transparente), preenche verde sólido com leve zoom (1.05x) no hover, ícone <code>chevron-left</code>, texto padrão "Voltar ao Início" (pode ser customizado)</td></tr>
+      <tr><td>Responsivo</td><td>em mobile, título e botão ficam lado a lado com o título ocupando o espaço disponível</td></tr>
+    </table>
+  </div>
+
+  <div class="page" id="page-code">
+    <div class="eyebrow">Implementação</div>
+    <h1>Tailwind / CSS</h1>
+    <p class="lead">Tokens prontos para uso em projetos baseados em Tailwind/shadcn.</p>
+    <pre>// tailwind.config.js (trecho de cores)
+colors: {
+  background: '#F5F7FC',
+  foreground: '#0A1A2E',
+  card: { DEFAULT: '#FFFFFF', foreground: '#0A1A2E' },
+  primary: { DEFAULT: '#1F4993', foreground: '#FFFFFF' },
+  secondary: { DEFAULT: '#F5F5F6', foreground: '#57575A' },
+  muted: { DEFAULT: '#E6E6E7', foreground: '#8A8A8D' },
+  accent: { DEFAULT: '#75C566', foreground: '#FFFFFF' },
+  destructive: { DEFAULT: '#EF4444', foreground: '#FAFAFA' },
+  border: '#E0E0E1',
+  input: '#E0E0E1',
+  ring: '#75C566',
+  chart: { 1: '#F97316', 2: '#14B8A6', 3: '#1E3A5F', 4: '#FCD34D', 5: '#F97316' }
+},
+borderRadius: { lg: '12.8px', md: '10.8px', sm: '8.8px' },
+fontFamily: { sans: ['"Exo 2"', 'ui-sans-serif', 'system-ui'] }</pre>
+    <div class="note">Modo escuro fora do escopo desta versão (v2.0). Sem tokens de dark mode até haver decisão aprovada.</div>
+    <footer class="docfooter"><span>Coplan Tecnologia · Mantido por Diego Loureiro, Líder de Inovação</span><span>Design System v2.0</span></footer>
+  </div>
+
+</main>
+
+<footer class="doc-footer-real">
+  <span>© 2026 Coplan Tecnologia. Todos os direitos reservados.</span>
+  <span class="doc-footer-links">Política de Privacidade &nbsp; Termos de Uso &nbsp; Sobre &nbsp;&nbsp; <b>Download na App Store</b> &nbsp; <b>Disponível no Google Play</b></span>
+</footer>
+</div>
+
+<div class="toast-live" id="liveToast">
+  <span class="toast-close" onclick="hideToast()">✕</span>
+  <b id="toastTitle">Sucesso</b>
+  <p id="toastMsg">Alterações salvas com sucesso.</p>
+</div>
+
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-card">
+    <div class="confirm-icon">⚠</div>
+    <h3>Excluir registro</h3>
+    <p>Essa ação não pode ser desfeita. Tem certeza que deseja excluir este item?</p>
+    <div class="confirm-actions">
+      <button class="confirm-cancel" onclick="hideConfirmModal()">Cancelar</button>
+      <button class="confirm-confirm" onclick="hideConfirmModal()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<div class="confirm-overlay" id="fluxoOverlay">
+  <div class="confirm-card fluxo-card">
+    <div class="fluxo-head">
+      <h3>Informações do Fluxo</h3>
+      <span class="fluxo-close" onclick="hideFluxoModal()">✕</span>
+    </div>
+    <h4 class="readonly-section-title" style="font-size:14px;display:flex;align-items:center;gap:6px"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Detalhes</h4>
+    <p class="fluxo-title" id="fluxoTitle">Nota de Pagamento - 19/06/2026 08:47</p>
+    <div class="readonly-grid" style="margin:14px 0">
+      <div class="readonly-field"><label>Incluído por</label><div class="readonly-value" style="background:none;padding:0;font-weight:600">ALISSON CESAR DA SILVA RONDON LOPES - COPLAN</div></div>
+      <div class="readonly-field"><label>Unidade Gestora</label><div class="readonly-value" style="background:none;padding:0;font-weight:600">Contábil</div></div>
+      <div class="readonly-field"><label>Data de Inclusão</label><div class="readonly-value" style="background:none;padding:0;font-weight:600">19/06/2026</div></div>
+      <div class="readonly-field"><label>Assinatura Exigida</label><div class="readonly-value" style="background:none;padding:0;font-weight:600">GOV.BR</div></div>
+    </div>
+    <div class="fluxo-pills">
+      <span class="fluxo-pill">👤 1 Assinante</span>
+      <span class="fluxo-pill">📄 1 Documento</span>
+    </div>
+    <h4 class="readonly-section-title" style="font-size:14px;margin-top:20px">Assinantes</h4>
+    <div class="fluxo-signer">
+      <span class="fluxo-signer-num">1</span>
+      <div class="fluxo-signer-info"><b>CESAR SILVA PAIXAO</b><span>Assinante</span></div>
+      <span class="fluxo-status-pending" id="fluxoStatus">🕐 Pendente</span>
+    </div>
+    <h4 class="readonly-section-title" style="font-size:14px;margin-top:20px">Documento</h4>
+    <div class="fluxo-doc-drop">📄</div>
+  </div>
+</div>
+
+
+<script>
+  // navegação principal
+  const links = document.querySelectorAll('#nav a');
+  const pages = document.querySelectorAll('.page');
+  links.forEach(link => {
+    link.addEventListener('click', () => {
+      links.forEach(l => l.classList.remove('active'));
+      pages.forEach(p => p.classList.remove('active'));
+      link.classList.add('active');
+      document.getElementById('page-' + link.dataset.page).classList.add('active');
+      window.scrollTo(0,0);
+    });
+  });
+
+  // accordion (cards)
+  function toggleAccordion(head){
+    head.classList.toggle('open');
+    const body = head.nextElementSibling;
+    body.classList.toggle('open');
+  }
+  function toggleReadonlyExpand(){
+    document.getElementById('readonlyExpand').classList.toggle('open');
+  }
+  function switchProfileTab(btn, tab){
+    document.querySelectorAll('#profileTabStrip button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    ['cadastro','vinculo','pagamento'].forEach(t=>{
+      document.getElementById('tab-'+t).style.display = (t===tab) ? '' : 'none';
+    });
+  }
+
+  // tabs internas da seção Tabelas
+  document.querySelectorAll('.tab-strip button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab-strip button').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.tbl-section').forEach(s=>s.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tbl-'+btn.dataset.tbl).classList.add('active');
+    });
+  });
+
+  // ordenação
+  document.querySelectorAll('#sortTable th.sortable').forEach(th=>{
+    th.addEventListener('click', ()=>{
+      const col = +th.dataset.col;
+      const asc = !(th.classList.contains('active') && th.dataset.dir === 'asc');
+      document.querySelectorAll('#sortTable th.sortable').forEach(h=>{h.classList.remove('active');h.classList.remove('desc');});
+      th.classList.add('active');
+      th.dataset.dir = asc ? 'asc' : 'desc';
+      if(!asc) th.classList.add('desc');
+      const tbody = document.getElementById('sortBody');
+      const rows = Array.from(tbody.querySelectorAll('tr'));
+      rows.sort((a,b)=>{
+        const cellsA = a.children[col], cellsB = b.children[col];
+        const va = cellsA.dataset.v !== undefined ? +cellsA.dataset.v : cellsA.textContent.trim().toLowerCase();
+        const vb = cellsB.dataset.v !== undefined ? +cellsB.dataset.v : cellsB.textContent.trim().toLowerCase();
+        if(va < vb) return asc ? -1 : 1;
+        if(va > vb) return asc ? 1 : -1;
+        return 0;
+      });
+      rows.forEach(r=>tbody.appendChild(r));
+    });
+  });
+
+  // busca/filtro
+  function filterTable(){
+    const q = document.getElementById('tblFilterInput').value.trim().toLowerCase();
+    const rows = document.querySelectorAll('#filterBody tr');
+    let visible = 0;
+    rows.forEach(r=>{
+      const match = r.dataset.name.includes(q);
+      r.style.display = match ? '' : 'none';
+      if(match) visible++;
+    });
+    document.getElementById('filterEmpty').style.display = visible === 0 ? 'block' : 'none';
+  }
+
+  // seleção em massa
+  function updateBulkBar(){
+    const checked = document.querySelectorAll('#selectBody input[type=checkbox]:checked').length;
+    const bar = document.getElementById('bulkBar');
+    document.getElementById('bulkCount').textContent = checked;
+    bar.classList.toggle('show', checked > 0);
+  }
+  function toggleRow(cb){
+    cb.closest('tr').classList.toggle('selected', cb.checked);
+    updateBulkBar();
+  }
+  function toggleAll(master){
+    document.querySelectorAll('#selectBody input[type=checkbox]').forEach(cb=>{
+      cb.checked = master.checked;
+      cb.closest('tr').classList.toggle('selected', master.checked);
+    });
+    updateBulkBar();
+  }
+  function clearSelection(){
+    document.querySelectorAll('#selectBody input[type=checkbox]').forEach(cb=>{cb.checked=false;cb.closest('tr').classList.remove('selected');});
+    document.getElementById('selectAll').checked = false;
+    updateBulkBar();
+  }
+
+  // expansão de linha
+  function toggleExpand(row, id){
+    const content = document.getElementById(id);
+    const toggle = document.getElementById('tog-'+id);
+    content.classList.toggle('open');
+    toggle.classList.toggle('open');
+  }
+
+  // paginação
+  const tipos = ['Nota de Pagamento','Nota de Liquidação','Nota de Empenho'];
+  const pagData = [];
+  for(let i=0;i<35;i++){
+    pagData.push({
+      nome: tipos[i%3] + ' - 19/06/2026 ' + String(8+Math.floor(i/8)).padStart(2,'0') + ':' + String((47-i*3+60)%60).padStart(2,'0'),
+      data: '19/06/2026',
+      tipo: tipos[i%3],
+      assinantes: '0/1',
+      status: 'Pendente'
+    });
+  }
+  let pageSize = 10;
+  let currentPage = 1;
+  function renderPage(){
+    const body = document.getElementById('pagBody');
+    body.innerHTML='';
+    const start = (currentPage-1)*pageSize;
+    pagData.slice(start,start+pageSize).forEach(row=>{
+      body.innerHTML += `<tr class="tbl-row">
+        <td><input type="checkbox"></td>
+        <td><b>${row.nome}</b></td>
+        <td>${row.data}</td>
+        <td><span class="type-pill">${row.tipo}</span></td>
+        <td>${row.assinantes}</td>
+        <td><span class="status-pill-outline">🕐 ${row.status}</span></td>
+        <td><button class="btn-detail" onclick="showFluxoModal('${row.nome}','${row.status}')">Detalhes</button></td>
+      </tr>`;
+    });
+    const totalPages = Math.ceil(pagData.length/pageSize);
+    document.getElementById('pagSummary').textContent = `Página ${currentPage} de ${totalPages} | ${pagData.length} Registros Encontrados`;
+    const controls = document.getElementById('pagControls');
+    controls.innerHTML='';
+    const mkBtn = (label, page, disabled) => {
+      const b = document.createElement('button');
+      b.textContent = label;
+      b.classList.add('arrow-btn');
+      if(disabled) b.disabled = true;
+      b.onclick = ()=>{currentPage=page;renderPage();};
+      return b;
+    };
+    controls.appendChild(mkBtn('«',1,currentPage===1));
+    controls.appendChild(mkBtn('‹',Math.max(1,currentPage-1),currentPage===1));
+    for(let i=1;i<=totalPages;i++){
+      const b = document.createElement('button');
+      b.textContent = i;
+      b.classList.add('page-num');
+      if(i===currentPage) b.classList.add('active');
+      b.onclick = ()=>{currentPage=i;renderPage();};
+      controls.appendChild(b);
+    }
+    controls.appendChild(mkBtn('›',Math.min(totalPages,currentPage+1),currentPage===totalPages));
+    controls.appendChild(mkBtn('»',totalPages,currentPage===totalPages));
+  }
+  function changePageSize(){
+    pageSize = +document.getElementById('pagSize').value;
+    currentPage = 1;
+    renderPage();
+  }
+  renderPage();
+
+  // estados (loading / empty / data)
+  function setTableState(state, btn){
+    document.querySelectorAll('#page-tables .tab-strip').forEach(()=>{});
+    document.querySelectorAll('#tbl-states .btn-sm').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const body = document.getElementById('stateBody');
+    if(state==='loading'){
+      body.innerHTML = Array(3).fill('<tr><td><div class="skeleton" style="width:80%"></div></td><td><div class="skeleton" style="width:60%"></div></td><td><div class="skeleton" style="width:40%"></div></td></tr>').join('');
+    } else if(state==='empty'){
+      body.innerHTML = '<tr><td colspan="3"><div class="empty-state"><div class="icon">○</div>Nenhum registro encontrado.</div></td></tr>';
+    } else {
+      body.innerHTML = `
+        <tr class="tbl-row"><td>Guia IPTU 2026</td><td><span class="status-chip status-active">Pago</span></td><td>R$ 340,00</td></tr>
+        <tr class="tbl-row"><td>Taxa de coleta</td><td><span class="status-chip status-pending">Pendente</span></td><td>R$ 90,00</td></tr>
+        <tr class="tbl-row"><td>ISS competência 05</td><td><span class="status-chip status-error">Vencido</span></td><td>R$ 512,00</td></tr>`;
+    }
+  }
+  setTableState('loading', document.querySelector('#tbl-states .btn-sm'));  // sidebar de navegação (recolher/expandir)
+  function toggleDocSidebar(){
+    document.querySelector('aside').classList.toggle('collapsed');
+    const btn = document.getElementById('docCollapseBtn');
+    btn.classList.toggle('flipped');
+    btn.title = btn.classList.contains('flipped') ? 'Abrir Menu' : 'Fechar Menu';
+  }
+  function checkOccEmpty(){
+    const remaining = document.querySelectorAll('#hdrOccList .hdr-occurrence').length;
+    document.getElementById('hdrOccEnd').style.display = remaining === 0 ? 'block' : 'none';
+  }
+  function dismissOccurrence(el){
+    const row = el.closest('.hdr-occurrence');
+    row.style.maxHeight = row.offsetHeight + 'px';
+    requestAnimationFrame(()=>{
+      row.style.opacity = '0';
+      row.style.maxHeight = '0';
+      row.style.padding = '0 10px';
+      row.style.overflow = 'hidden';
+    });
+    setTimeout(()=>{ row.remove(); checkOccEmpty(); }, 220);
+  }
+  function clearAllOccurrences(){
+    document.getElementById('hdrOccList').innerHTML = '';
+    checkOccEmpty();
+  }
+  function closeAllDropdowns(){
+    document.querySelectorAll('.hdr-dropdown.open').forEach(d=>d.classList.remove('open'));
+  }
+  function toggleDropdown(id){
+    const el = document.getElementById(id);
+    const wasOpen = el.classList.contains('open');
+    closeAllDropdowns();
+    if(!wasOpen) el.classList.add('open');
+  }
+  document.addEventListener('click', e=>{
+    if(!e.target.closest('.hdr-icon-wrap') && !e.target.closest('.hdr-context-wrap')) closeAllDropdowns();
+  });
+  function goToCredits(){
+    document.querySelector('#nav a[data-page="intro"]').click();
+    window.scrollTo(0,0);
+  }
+  function toggleShellSidebar(){
+    document.getElementById('shellSidebar').classList.toggle('collapsed');
+    document.getElementById('shellBrand').classList.toggle('collapsed');
+    const btn = document.getElementById('shellCollapseBtn');
+    btn.classList.toggle('flipped');
+    btn.title = btn.classList.contains('flipped') ? 'Abrir Menu' : 'Fechar Menu';
+  }
+  // seletor de unidade gestora
+  function toggleOrgPanel(){
+    document.getElementById('shellOrg').classList.toggle('open');
+    document.getElementById('shellOrgPanel').classList.toggle('open');
+  }
+
+  // toast ao vivo
+  const toastContent = {
+    success: {title: 'Sucesso', msg: 'Alterações salvas com sucesso.'},
+    error: {title: 'Erro', msg: 'Não foi possível concluir a operação.'},
+    info: {title: 'Informação', msg: 'Sua solicitação está em análise.'}
+  };
+  let toastTimer;
+  function fireToast(type){
+    const el = document.getElementById('liveToast');
+    el.className = 'toast-live ' + type;
+    document.getElementById('toastTitle').textContent = toastContent[type].title;
+    document.getElementById('toastMsg').textContent = toastContent[type].msg;
+    requestAnimationFrame(()=> el.classList.add('show'));
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(hideToast, 4000);
+  }
+  function hideToast(){
+    document.getElementById('liveToast').classList.remove('show');
+  }
+
+  // modal de confirmação
+  function showConfirmModal(){
+    document.getElementById('confirmOverlay').classList.add('show');
+  }
+  function hideConfirmModal(){
+    document.getElementById('confirmOverlay').classList.remove('show');
+  }
+  function showFluxoModal(nome, status){
+    document.getElementById('fluxoTitle').textContent = nome;
+    const statusEl = document.getElementById('fluxoStatus');
+    if(status === 'Pendente'){
+      statusEl.className = 'fluxo-status-pending';
+      statusEl.textContent = '🕐 Pendente';
+    } else {
+      statusEl.className = 'fluxo-status-signed';
+      statusEl.textContent = '✓ Assinado';
+    }
+    document.getElementById('fluxoOverlay').classList.add('show');
+  }
+  function hideFluxoModal(){
+    document.getElementById('fluxoOverlay').classList.remove('show');
+  }
+  // busca do cabeçalho (indexa as próprias seções do documento)
+  function buildSearchIndex(){
+    const items = [];
+    document.querySelectorAll('#nav .navgroup').forEach(group=>{
+      const cat = group.querySelector('.navgroup-title')?.textContent.trim() || '';
+      group.querySelectorAll('a[data-page]').forEach(a=>{
+        items.push({label: a.querySelector('span')?.textContent.trim() || a.textContent.trim(), page: a.dataset.page, cat});
+      });
+    });
+    return items;
+  }
+  const searchIndex = buildSearchIndex();
+
+  function renderSearchResults(list){
+    const box = document.getElementById('docSearchResults');
+    if(list.length === 0){
+      box.innerHTML = '<div style="padding:16px;font-size:13px;color:var(--muted)">Nenhuma seção encontrada.</div>';
+      return;
+    }
+    box.innerHTML = list.map(item =>
+      `<div class="doc-search-result" onclick="goToSearchResult('${item.page}')"><span>${item.label}</span><span class="cat">${item.cat}</span></div>`
+    ).join('');
+  }
+
+  function openDocSearch(){
+    document.getElementById('docSearchPanel').classList.add('open');
+    document.getElementById('docSearchBackdrop').classList.add('open');
+    renderSearchResults(searchIndex);
+    setTimeout(()=>document.getElementById('docSearchInput').focus(), 10);
+  }
+  function closeDocSearch(){
+    document.getElementById('docSearchPanel').classList.remove('open');
+    document.getElementById('docSearchBackdrop').classList.remove('open');
+    document.getElementById('docSearchInput').value = '';
+  }
+  function filterDocSearch(){
+    const q = document.getElementById('docSearchInput').value.trim().toLowerCase();
+    const filtered = searchIndex.filter(item => item.label.toLowerCase().includes(q) || item.cat.toLowerCase().includes(q));
+    renderSearchResults(filtered);
+  }
+  function goToSearchResult(page){
+    document.querySelector('#nav a[data-page="'+page+'"]').click();
+    closeDocSearch();
+  }
+  document.addEventListener('keydown', e=>{
+    if(e.key === 'Escape') closeDocSearch();
+    if((e.metaKey || e.ctrlKey) && e.key === 'k'){ e.preventDefault(); openDocSearch(); }
+  });
+</script>
+
+</body>
+</html>
