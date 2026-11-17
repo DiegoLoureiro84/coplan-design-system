@@ -31,8 +31,8 @@ class AppColors {
   static const rowHover = Color(0xFFEAF7EE);
 
   /// Somente para bloqueio e erro que impede a ação.
-  /// #EF4444: borda, barra e ícone. Texto vermelho e fundo com texto branco: [destructiveStrong].
-  static const destructive = Color(0xFFEF4444);
+  /// #F44336: borda, barra e ícone. Texto vermelho e fundo com texto branco: [destructiveStrong].
+  static const destructive = Color(0xFFF44336);
   static const destructiveStrong = Color(0xFFB91C1C); // 6,5:1 sobre branco
   static const destructiveBackground = Color(0xFFFEF2F2);
   static const destructiveBorder = Color(0xFFFECACA);

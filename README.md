@@ -22,7 +22,7 @@ Os componentes da página são os componentes reais do protótipo, renderizados 
 
 ## Regras obrigatórias
 
-1. Vermelho só para o que bloqueia. `#EF4444` em borda, barra e ícone; `#B91C1C` em texto e em fundo com texto branco. Alerta que não bloqueia usa a família âmbar.
+1. Vermelho só para o que bloqueia. `#F44336` em borda, barra e ícone; `#B91C1C` em texto e em fundo com texto branco. Alerta que não bloqueia usa a família âmbar.
 2. O texto nunca assume a cor do componente.
 3. Nenhuma janela modal. Confirmação é inline; fluxos secundários aparecem no lugar do conteúdo; ação reversível, como Sair, não pede confirmação.
 4. Pílulas de classificação são cinza neutro. Só status tem cor.
@@ -45,7 +45,7 @@ Os componentes da página são os componentes reais do protótipo, renderizados 
   --border:#E0E0E1; --secondary:#F5F5F6; --secondary-fg:#57575A;
   --muted:#E6E6E7; --muted-fg:#6B6B6E; --inactive:#6B6B6E;
   --readonly:#EEF1FA; --light-green:#E6F8F0; --row-hover:#EAF7EE;
-  --destructive:#EF4444; --danger-strong:#B91C1C; --destructive-bg:#FEF2F2; --destructive-border:#FECACA;
+  --destructive:#F44336; --danger-strong:#B91C1C; --destructive-bg:#FEF2F2; --destructive-border:#FECACA;
   --warn-bg:#FEF3C7; --warn-fg:#78350F; --pend:#FCD34D; --star:#F5B301;
   --r-lg:12.8px; --r-md:10.8px; --r-sm:8.8px;
   --header:65px; --sidebar:280px; --sidebar-c:60px;
@@ -83,7 +83,7 @@ Exo 2, embutida no arquivo. Ícones Lucide.
 
 ## Descontinuado
 
-Fonte Coplan Display, janela modal de confirmação, laranja e tons fora da paleta, chips pastel, ícone ☰ e ícones no menu aberto, seletor de competência, cabeçalho de tabela em caixa alta, título de página dentro dos sistemas, fundo `#F5F7FC`, paginação ativa azul, ponto de notificação vermelho, termo "requisição", janelas modais (Sair, Recuperar senha, Gerar cópia), texto branco sobre `#75C566`, texto em `#8A8A8D`, texto vermelho em `#EF4444`, aviso em `#B45309`, célula de tabela em 13,5px.
+Fonte Coplan Display, janela modal de confirmação, laranja e tons fora da paleta, chips pastel, ícone ☰ e ícones no menu aberto, seletor de competência, cabeçalho de tabela em caixa alta, título de página dentro dos sistemas, fundo `#F5F7FC`, paginação ativa azul, ponto de notificação vermelho, termo "requisição", janelas modais (Sair, Recuperar senha, Gerar cópia), texto branco sobre `#75C566`, texto em `#8A8A8D`, vermelho base `#EF4444` (agora `#F44336`, o dos portais), aviso em `#B45309`, célula de tabela em 13,5px.
 
 ## Contato
 

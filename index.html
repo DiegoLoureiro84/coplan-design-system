@@ -12,7 +12,7 @@
 :root{
   --primary:#1F4993; --accent:#75C566; --dark-green:#01814E; --blue:#032861;
   --bg:#F8F9FE; --card:#FFFFFF; --fg:#0A1A2E; --border:#E0E0E1; --secondary:#F5F5F6;
-  --secondary-fg:#57575A; --muted:#E6E6E7; --muted-fg:#6B6B6E; --destructive:#EF4444;
+  --secondary-fg:#57575A; --muted:#E6E6E7; --muted-fg:#6B6B6E; --destructive:#F44336;
   --light-green:#E6F8F0; --readonly:#EEF1FA; --row-hover:#EAF7EE;
   --r-lg:12.8px; --r-md:10.8px; --r-sm:8.8px;
   --sidebar:260px; --sidebar-c:64px; --header:64px;
@@ -522,7 +522,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13.5px}
 .alert .ic{flex:none;margin-top:1px}
 .alert.warn{background:#FEF3C7;color:#78350F}
 .alert.info{background:var(--readonly);color:var(--primary)}
-.alert.err{background:#FEF2F2;color:#EF4444}
+.alert.err{background:#FEF2F2;color:#F44336}
 .copy-banner{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:var(--r-lg);background:var(--primary);color:#fff;margin-bottom:16px}
 .counter{font-size:12px;color:var(--muted-fg);text-align:right;margin-top:4px}
 
@@ -821,8 +821,8 @@ body{background:var(--bg)}
 .pp-sig .ln .ic{width:14px;height:14px}.pp-sig b{display:block;margin-top:6px}.pp-sig small{color:#555;font-size:.8em}
 .pp-sig:not(.ok) .ln{border-bottom-style:dashed;border-color:#78350F}
 .pp-note{display:flex;gap:8px;align-items:center;margin-top:calc(24px * var(--z));padding:calc(10px * var(--z));border-radius:6px;background:#EEF1FA;color:#1F4993;font-size:.9em}
-.pp-note.bad{background:#FEF2F2;color:#EF4444}.pp-note .ic{width:16px;height:16px;flex:none}
-.paper .neg{color:#EF4444}.paper .pos{color:#01814E}
+.pp-note.bad{background:#FEF2F2;color:#F44336}.pp-note .ic{width:16px;height:16px;flex:none}
+.paper .neg{color:#F44336}.paper .pos{color:#01814E}
 .vw-sign{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--border);background:#FEF3C7}
 .vw-sign>div{display:flex;gap:10px;align-items:center;flex:1;min-width:240px}.vw-sign>div>.ic{width:22px;height:22px;color:#78350F}
 .vw-sign b{display:block;font-weight:600}.vw-sign small{font-size:12.5px;color:var(--secondary-fg)}
@@ -865,29 +865,29 @@ body{background:var(--bg)}
 .lnk{color:var(--primary);font-weight:600;text-decoration:underline;text-underline-offset:2px}
 .tl2 li.w .lnk{color:var(--destructive)}
 .tl2 li.st-alert .tli{border-color:#FECACA;color:var(--destructive);background:#FEF2F2}
-.chip.bad-o{background:#FEF2F2;color:#EF4444;border:1px solid #FECACA}
+.chip.bad-o{background:#FEF2F2;color:#F44336;border:1px solid #FECACA}
 .chip.bad-o .ic{width:12px;height:12px}
-.mt-pend{background:#FEF2F2!important;color:#EF4444!important}
+.mt-pend{background:#FEF2F2!important;color:#F44336!important}
 .vw-sign.al{background:#FEF2F2}.vw-sign.al>div>.ic{color:var(--destructive)}
 .vw-stage{padding:12px;background:#E6E6E7}
 .paper{width:min(100%, calc(640px * var(--z)))}
 .pp-p{line-height:1.6;margin-top:calc(12px * var(--z))}
 .pp-sub{font-size:1em;margin:calc(18px * var(--z)) 0 calc(4px * var(--z));color:#032861}
 @media (max-width:1300px){.tlv{grid-template-columns:minmax(400px,1fr) minmax(0,1fr)}}
-.chip.bad-o{background:#EF4444!important;color:#fff!important;border:0!important}
+.chip.bad-o{background:#F44336!important;color:#fff!important;border:0!important}
 .chip.bad-o .ic{color:#fff}
-.mt-pend{background:#EF4444!important;color:#fff!important}.mt-pend .ic{color:#fff}
-.tl2 li.st-alert .tli{border-color:#EF4444;color:#EF4444;background:#FEF2F2}
-.vw-sign.al{background:#FEF2F2;border-left:4px solid #EF4444}.vw-sign.al b{color:#EF4444}
-.tl2 li.w .lnk{color:#EF4444}
-.pp-note.bad{background:#FEF2F2;color:#EF4444;border-left:4px solid #EF4444}
-.chip.bad{background:#EF4444}
-.prio{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#EF4444;color:#fff!important;font-weight:800;font-size:15px;line-height:1}
+.mt-pend{background:#F44336!important;color:#fff!important}.mt-pend .ic{color:#fff}
+.tl2 li.st-alert .tli{border-color:#F44336;color:#F44336;background:#FEF2F2}
+.vw-sign.al{background:#FEF2F2;border-left:4px solid #F44336}.vw-sign.al b{color:#F44336}
+.tl2 li.w .lnk{color:#F44336}
+.pp-note.bad{background:#FEF2F2;color:#F44336;border-left:4px solid #F44336}
+.chip.bad{background:#F44336}
+.prio{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#F44336;color:#fff!important;font-weight:800;font-size:15px;line-height:1}
 .prio.sm{width:18px;height:18px;font-size:13px;font-weight:900;vertical-align:-2px;margin-right:4px}
 .prio-c{width:90px;text-align:center}
-.prio-t{color:#EF4444;font-weight:700;display:inline-flex;align-items:center}
-.kx .kx-an .prio-t{color:#EF4444;font-weight:700;display:inline-flex;align-items:center;gap:6px}
-.kx .kx-an .prio.sm,.prio.sm{display:inline-grid!important;place-items:center;justify-content:center;text-align:center;padding:0;margin:0;width:18px;height:18px;border-radius:50%;background:#EF4444;color:#fff!important;font-size:12px;font-weight:900;line-height:1}
+.prio-t{color:#F44336;font-weight:700;display:inline-flex;align-items:center}
+.kx .kx-an .prio-t{color:#F44336;font-weight:700;display:inline-flex;align-items:center;gap:6px}
+.kx .kx-an .prio.sm,.prio.sm{display:inline-grid!important;place-items:center;justify-content:center;text-align:center;padding:0;margin:0;width:18px;height:18px;border-radius:50%;background:#F44336;color:#fff!important;font-size:12px;font-weight:900;line-height:1}
 .side .card-b>div.sum-use{display:block;margin-top:8px;padding:12px;border:0;border-radius:var(--r-lg);background:var(--readonly)}
 .sum-use .row{display:flex;justify-content:space-between;gap:8px;font-size:13px}
 .sum-use .row b{font-variant-numeric:tabular-nums}
@@ -1284,7 +1284,7 @@ body{background:var(--bg)}
 .ex-y.on{background:var(--light-green)!important;border-color:var(--dark-green)!important;color:var(--fg)!important}
 .ex-y.on *{color:var(--fg)!important}
 .fsec-h .n:not(.ok){color:var(--fg)}
-/* vermelho: #EF4444 fica para borda, barra e ícone; texto e fundo com texto usam o vermelho forte */
+/* vermelho: #F44336 fica para borda, barra e ícone; texto e fundo com texto usam o vermelho forte */
 .hint.err,.fgrid label i.req,.alert.err,.tbl .sub.neg,.kx-an .neg,.neg,.tl li.neg b,.tl li.neg p,.tl2 li.st-neg b,.tl2 li.st-neg p,.pp-note.bad,.paper .neg,.tbl td.neg,.tl2 li.st-neg .tl2-link,.tl2 li.w .lnk,.vw-sign.al b,.prio-t,.kx .kx-an .prio-t,.neg-t,.tl li.neg .tli,.tl2 li.st-neg .tli,.tl2 li.st-alert .tli{color:var(--danger-strong)!important}
 .toast.error,.fchip button:hover,.chip.bad,.prio,.kx .kx-an .prio.sm,.prio.sm,.prio-tag .prio-i,.btn-danger,.fpop .menu-item.danger:hover{background:var(--danger-strong)!important;color:#fff!important}
 .fpop .menu-item.danger:hover *{color:#fff!important}
@@ -1457,8 +1457,8 @@ code.k{font:12.5px ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--
 <tr><td><b>Um padrão por problema</b></td><td>Um único seletor, um único botão de limpar filtro, uma única paginação, um único estilo de item de menu, em todos os sistemas.</td></tr>
 <tr><td><b>Ação imediata</b></td><td>Filtros aplicam ao mudar, sem botão Aplicar. O que pode ser desfeito não pede confirmação.</td></tr>
 <tr><td><b>O sistema se localiza sozinho</b></td><td>Breadcrumb, título da aba do navegador, unidade gestora e exercício sempre visíveis dizem onde o usuário está.</td></tr>
-</table></section><section class="ds-sec" id="regras"><h2>Regras obrigatórias</h2><p class="ds-lead">Regras que já geraram retrabalho. Revisão de tela começa por esta lista.</p><ol class="ds-rules"><li>Vermelho só para o que bloqueia: erro de validação, anulação, certidão vencida que impede o pagamento. <code class="k">#EF4444</code> em borda, barra e ícone; <code class="k">#B91C1C</code> em texto e em fundo com texto branco. Alerta que não bloqueia usa a família âmbar.</li><li>O texto nunca assume a cor do componente. Um switch verde não deixa "Sim" verde; um botão de ação não deixa o rótulo da tela colorido.</li><li>Nenhuma janela modal. Confirmação de anulação, exclusão ou descarte é feita em barra inline. Fluxos secundários (recuperar senha, gerar cópia) aparecem no lugar do conteúdo. Ação reversível, como Sair, não pede confirmação.</li><li>Pílulas de classificação (tipo, nível, natureza) são cinza neutro. Só pílulas de status carregam cor.</li><li>Dentro dos sistemas não há título nem subtítulo de página. O breadcrumb identifica a tela.</li><li>Itens do menu lateral não têm ícone quando o menu está aberto, e todos usam o mesmo estilo de texto (15px, peso 400). Nada de negrito para destacar item.</li><li>Selecionado é verde claro (<code class="k">#E6F8F0</code>) com texto escuro e marca: barra verde escura à esquerda no menu, ✓ nos seletores. Hover é verde <code class="k">#75C566</code> com texto escuro <code class="k">#0A1A2E</code> (8,3:1). Texto branco sobre verde só no <code class="k">#01814E</code> (4,9:1): toast de sucesso, pílula de pago, paginação ativa. Vale para menu, seletor, troca de sistema e unidade gestora.</li><li>Todo seletor do sistema usa o seletor padrão. Com mais de 7 opções, ele ganha campo de busca.</li><li>"Limpar filtro" é sempre o mesmo botão, no fim da linha de filtros, e só aparece quando existe filtro ativo.</li><li>Dados exibidos exatamente como estão no cadastro do Central, inclusive a grafia. Correções de cadastro são tratadas no cadastro, não na interface.</li><li>Nomenclatura do domínio: NAD (não "requisição") e natureza da despesa.</li><li>Toda tela tem endereço próprio (deep link). O título da aba segue o formato <code class="k">Tela · Sistema · Coplan</code>.</li><li>Todo texto passa de 4,5:1 de contraste (3:1 a partir de 24px, ou 18,7px em negrito). Antes de criar uma combinação nova de cor, confira na tabela de contraste da seção Cores.</li></ol></section><section class="ds-sec" id="cores"><h2>Cores</h2><p class="ds-lead">Paleta fechada. Cor fora desta lista não entra em tela, inclusive em botões de ação e gráficos.</p>
-<div class="ds-sw"><div class="c"><i style="background:#1F4993"></i><div><b>Primária</b><code>#1F4993 · --primary</code><br>Ação principal, links, valores de destaque, títulos de login.</div></div><div class="c"><i style="background:#75C566"></i><div><b>Verde de destaque</b><code>#75C566 · --accent</code><br>Hover de itens e switch ligado. Texto sobre ele sempre escuro.</div></div><div class="c"><i style="background:#01814E"></i><div><b>Verde escuro</b><code>#01814E · --dark-green</code><br>Fundo verde com texto branco: sucesso, pago, paginação ativa, contador.</div></div><div class="c"><i style="background:#032861"></i><div><b>Azul marinho</b><code>#032861 · --blue</code><br>Superfícies escuras e marca.</div></div><div class="c"><i style="background:#F8F9FE"></i><div><b>Fundo</b><code>#F8F9FE · --bg</code><br>Fundo da aplicação e dos campos.</div></div><div class="c"><i style="background:#FFFFFF"></i><div><b>Cartão</b><code>#FFFFFF · --card</code><br>Cartões, tabelas, menus.</div></div><div class="c"><i style="background:#0A1A2E"></i><div><b>Texto</b><code>#0A1A2E · --fg</code><br>Texto principal.</div></div><div class="c"><i style="background:#01060B"></i><div><b>Texto do menu</b><code>#01060B · --black</code><br>Itens do menu lateral.</div></div><div class="c"><i style="background:#57575A"></i><div><b>Texto secundário</b><code>#57575A · --secondary-fg</code><br>Descrições, rótulos de indicador.</div></div><div class="c"><i style="background:#6B6B6E"></i><div><b>Texto apagado</b><code>#6B6B6E · --muted-fg</code><br>Cabeçalho de tabela, legendas, placeholder. 5,3:1 sobre branco.</div></div><div class="c"><i style="background:#E0E0E1"></i><div><b>Borda</b><code>#E0E0E1 · --border</code><br>Bordas de cartão, campo e tabela.</div></div><div class="c"><i style="background:#F5F5F6"></i><div><b>Neutro</b><code>#F5F5F6 · --secondary</code><br>Pílulas neutras, botão cinza.</div></div><div class="c"><i style="background:#EEF1FA"></i><div><b>Somente leitura</b><code>#EEF1FA · --readonly</code><br>Campos não editáveis e barras inline.</div></div><div class="c"><i style="background:#E6F8F0"></i><div><b>Verde claro</b><code>#E6F8F0 · --light-green</code><br>Item selecionado em seletor e menu.</div></div><div class="c"><i style="background:#EAF7EE"></i><div><b>Hover de linha</b><code>#EAF7EE · --row-hover</code><br>Linha de tabela sob o cursor.</div></div><div class="c"><i style="background:#EF4444"></i><div><b>Destrutivo</b><code>#EF4444 · --destructive</code><br>Bloqueio: borda, barra e ícone. Fundos claros: #FEF2F2 e #FECACA.</div></div><div class="c"><i style="background:#B91C1C"></i><div><b>Destrutivo forte</b><code>#B91C1C · --danger-strong</code><br>Texto vermelho e fundo vermelho com texto branco (toast de erro). 6,5:1.</div></div><div class="c"><i style="background:#FEF3C7"></i><div><b>Aviso, fundo</b><code>#FEF3C7 · --warn-bg</code><br>Fundo do aviso que não bloqueia.</div></div><div class="c"><i style="background:#78350F"></i><div><b>Aviso, texto</b><code>#78350F · --warn-fg</code><br>Texto e ícone do aviso. 8,2:1 sobre o fundo de aviso.</div></div><div class="c"><i style="background:#FCD34D"></i><div><b>Pendente</b><code>#FCD34D · --pend</code><br>Pílula de pendente, com texto escuro (12,1:1).</div></div><div class="c"><i style="background:#F5B301"></i><div><b>Favorito</b><code>#F5B301 · --star</code><br>Estrela de favorito. Só ícone, nunca texto.</div></div></div>
+</table></section><section class="ds-sec" id="regras"><h2>Regras obrigatórias</h2><p class="ds-lead">Regras que já geraram retrabalho. Revisão de tela começa por esta lista.</p><ol class="ds-rules"><li>Vermelho só para o que bloqueia: erro de validação, anulação, certidão vencida que impede o pagamento. <code class="k">#F44336</code> em borda, barra e ícone; <code class="k">#B91C1C</code> em texto e em fundo com texto branco. Alerta que não bloqueia usa a família âmbar.</li><li>O texto nunca assume a cor do componente. Um switch verde não deixa "Sim" verde; um botão de ação não deixa o rótulo da tela colorido.</li><li>Nenhuma janela modal. Confirmação de anulação, exclusão ou descarte é feita em barra inline. Fluxos secundários (recuperar senha, gerar cópia) aparecem no lugar do conteúdo. Ação reversível, como Sair, não pede confirmação.</li><li>Pílulas de classificação (tipo, nível, natureza) são cinza neutro. Só pílulas de status carregam cor.</li><li>Dentro dos sistemas não há título nem subtítulo de página. O breadcrumb identifica a tela.</li><li>Itens do menu lateral não têm ícone quando o menu está aberto, e todos usam o mesmo estilo de texto (15px, peso 400). Nada de negrito para destacar item.</li><li>Selecionado é verde claro (<code class="k">#E6F8F0</code>) com texto escuro e marca: barra verde escura à esquerda no menu, ✓ nos seletores. Hover é verde <code class="k">#75C566</code> com texto escuro <code class="k">#0A1A2E</code> (8,3:1). Texto branco sobre verde só no <code class="k">#01814E</code> (4,9:1): toast de sucesso, pílula de pago, paginação ativa. Vale para menu, seletor, troca de sistema e unidade gestora.</li><li>Todo seletor do sistema usa o seletor padrão. Com mais de 7 opções, ele ganha campo de busca.</li><li>"Limpar filtro" é sempre o mesmo botão, no fim da linha de filtros, e só aparece quando existe filtro ativo.</li><li>Dados exibidos exatamente como estão no cadastro do Central, inclusive a grafia. Correções de cadastro são tratadas no cadastro, não na interface.</li><li>Nomenclatura do domínio: NAD (não "requisição") e natureza da despesa.</li><li>Toda tela tem endereço próprio (deep link). O título da aba segue o formato <code class="k">Tela · Sistema · Coplan</code>.</li><li>Todo texto passa de 4,5:1 de contraste (3:1 a partir de 24px, ou 18,7px em negrito). Antes de criar uma combinação nova de cor, confira na tabela de contraste da seção Cores.</li></ol></section><section class="ds-sec" id="cores"><h2>Cores</h2><p class="ds-lead">Paleta fechada. Cor fora desta lista não entra em tela, inclusive em botões de ação e gráficos.</p>
+<div class="ds-sw"><div class="c"><i style="background:#1F4993"></i><div><b>Primária</b><code>#1F4993 · --primary</code><br>Ação principal, links, valores de destaque, títulos de login.</div></div><div class="c"><i style="background:#75C566"></i><div><b>Verde de destaque</b><code>#75C566 · --accent</code><br>Hover de itens e switch ligado. Texto sobre ele sempre escuro.</div></div><div class="c"><i style="background:#01814E"></i><div><b>Verde escuro</b><code>#01814E · --dark-green</code><br>Fundo verde com texto branco: sucesso, pago, paginação ativa, contador.</div></div><div class="c"><i style="background:#032861"></i><div><b>Azul marinho</b><code>#032861 · --blue</code><br>Superfícies escuras e marca.</div></div><div class="c"><i style="background:#F8F9FE"></i><div><b>Fundo</b><code>#F8F9FE · --bg</code><br>Fundo da aplicação e dos campos.</div></div><div class="c"><i style="background:#FFFFFF"></i><div><b>Cartão</b><code>#FFFFFF · --card</code><br>Cartões, tabelas, menus.</div></div><div class="c"><i style="background:#0A1A2E"></i><div><b>Texto</b><code>#0A1A2E · --fg</code><br>Texto principal.</div></div><div class="c"><i style="background:#01060B"></i><div><b>Texto do menu</b><code>#01060B · --black</code><br>Itens do menu lateral.</div></div><div class="c"><i style="background:#57575A"></i><div><b>Texto secundário</b><code>#57575A · --secondary-fg</code><br>Descrições, rótulos de indicador.</div></div><div class="c"><i style="background:#6B6B6E"></i><div><b>Texto apagado</b><code>#6B6B6E · --muted-fg</code><br>Cabeçalho de tabela, legendas, placeholder. 5,3:1 sobre branco.</div></div><div class="c"><i style="background:#E0E0E1"></i><div><b>Borda</b><code>#E0E0E1 · --border</code><br>Bordas de cartão, campo e tabela.</div></div><div class="c"><i style="background:#F5F5F6"></i><div><b>Neutro</b><code>#F5F5F6 · --secondary</code><br>Pílulas neutras, botão cinza.</div></div><div class="c"><i style="background:#EEF1FA"></i><div><b>Somente leitura</b><code>#EEF1FA · --readonly</code><br>Campos não editáveis e barras inline.</div></div><div class="c"><i style="background:#E6F8F0"></i><div><b>Verde claro</b><code>#E6F8F0 · --light-green</code><br>Item selecionado em seletor e menu.</div></div><div class="c"><i style="background:#EAF7EE"></i><div><b>Hover de linha</b><code>#EAF7EE · --row-hover</code><br>Linha de tabela sob o cursor.</div></div><div class="c"><i style="background:#F44336"></i><div><b>Destrutivo</b><code>#F44336 · --destructive</code><br>Bloqueio: borda, barra e ícone. É o vermelho dos portais atuais. Fundos claros: #FEF2F2 e #FECACA.</div></div><div class="c"><i style="background:#B91C1C"></i><div><b>Destrutivo forte</b><code>#B91C1C · --danger-strong</code><br>Texto vermelho e fundo vermelho com texto branco (toast de erro). 6,5:1.</div></div><div class="c"><i style="background:#FEF3C7"></i><div><b>Aviso, fundo</b><code>#FEF3C7 · --warn-bg</code><br>Fundo do aviso que não bloqueia.</div></div><div class="c"><i style="background:#78350F"></i><div><b>Aviso, texto</b><code>#78350F · --warn-fg</code><br>Texto e ícone do aviso. 8,2:1 sobre o fundo de aviso.</div></div><div class="c"><i style="background:#FCD34D"></i><div><b>Pendente</b><code>#FCD34D · --pend</code><br>Pílula de pendente, com texto escuro (12,1:1).</div></div><div class="c"><i style="background:#F5B301"></i><div><b>Favorito</b><code>#F5B301 · --star</code><br>Estrela de favorito. Só ícone, nunca texto.</div></div></div>
 <p class="ds-sub">Contraste das combinações usadas</p>
 <table class="ds-tbl"><tr><th>Texto</th><th>Fundo</th><th>Contraste</th><th>Uso</th></tr>
 <tr><td>#0A1A2E</td><td>#FFFFFF</td><td>17,5:1</td><td>Texto principal</td></tr>
@@ -1472,7 +1472,7 @@ code.k{font:12.5px ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--
 <tr><td>#78350F</td><td><span style="background:#FEF3C7;padding:0 6px">#FEF3C7</span></td><td>8,2:1</td><td>Aviso que não bloqueia</td></tr>
 <tr><td>#0A1A2E</td><td><span style="background:#FCD34D;padding:0 6px">#FCD34D</span></td><td>12,1:1</td><td>Pílula de pendente</td></tr>
 </table>
-<p class="ds-p">Combinações proibidas: texto branco sobre <code class="k">#75C566</code> (2,1:1), texto branco sobre <code class="k">#EF4444</code> (3,8:1), texto vermelho em <code class="k">#EF4444</code> (3,8:1) e qualquer texto em <code class="k">#8A8A8D</code> (3,4:1).</p>
+<p class="ds-p">Combinações proibidas: texto branco sobre <code class="k">#75C566</code> (2,1:1), texto branco sobre <code class="k">#F44336</code> (3,7:1), texto vermelho em <code class="k">#F44336</code> (3,7:1) e qualquer texto em <code class="k">#8A8A8D</code> (3,4:1).</p>
 <div class="ds-dodont"><div class="do"><b>Faça</b>Use verde claro para seleção, verde de destaque com texto escuro no hover, azul para a ação principal e cinza neutro para classificação.</div>
 <div class="dont"><b>Não faça</b>Criar tons fora desta paleta (laranja, roxo, outros vermelhos), pintar números de vermelho para indicar valor negativo ou usar vermelho em alerta que não bloqueia.</div></div></section><section class="ds-sec" id="tipografia"><h2>Tipografia</h2><p class="ds-lead">Uma única família, Exo 2, embutida no próprio arquivo (sem depender de Google Fonts). Valores medidos no protótipo renderizado.</p>
 <table class="ds-tbl ds-type"><tr><th>Uso</th><th>Tamanho / peso</th><th>Cor</th><th>Exemplo</th></tr>
@@ -2079,7 +2079,7 @@ code.k{font:12.5px ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--
   --border:#E0E0E1; --secondary:#F5F5F6; --secondary-fg:#57575A;
   --muted:#E6E6E7; --muted-fg:#6B6B6E; --inactive:#6B6B6E;
   --readonly:#EEF1FA; --light-green:#E6F8F0; --row-hover:#EAF7EE;
-  --destructive:#EF4444; --danger-strong:#B91C1C; --destructive-bg:#FEF2F2; --destructive-border:#FECACA;
+  --destructive:#F44336; --danger-strong:#B91C1C; --destructive-bg:#FEF2F2; --destructive-border:#FECACA;
   --warn-bg:#FEF3C7; --warn-fg:#78350F; --pend:#FCD34D; --star:#F5B301;
   /* raio */
   --r-lg:12.8px; --r-md:10.8px; --r-sm:8.8px;
@@ -2104,7 +2104,7 @@ class CoplanColors {
   static const readonly = Color(0xFFEEF1FA);
   static const lightGreen = Color(0xFFE6F8F0);
   static const rowHover = Color(0xFFEAF7EE);
-  static const destructive = Color(0xFFEF4444);
+  static const destructive = Color(0xFFF44336);
   static const dangerStrong = Color(0xFFB91C1C);
   static const warnBg = Color(0xFFFEF3C7);
   static const warnFg = Color(0xFF78350F);
@@ -2116,7 +2116,7 @@ class CoplanLayout { static const header = 65.0; static const sidebar = 280.0; s
 theme: { extend: {
   colors: { primary:&#x27;#1F4993&#x27;, accent:&#x27;#75C566&#x27;, &#x27;dark-green&#x27;:&#x27;#01814E&#x27;, navy:&#x27;#032861&#x27;,
     bg:&#x27;#F8F9FE&#x27;, fg:&#x27;#0A1A2E&#x27;, border:&#x27;#E0E0E1&#x27;, secondary:&#x27;#F5F5F6&#x27;, &#x27;secondary-fg&#x27;:&#x27;#57575A&#x27;,
-    &#x27;muted-fg&#x27;:&#x27;#6B6B6E&#x27;, readonly:&#x27;#EEF1FA&#x27;, &#x27;light-green&#x27;:&#x27;#E6F8F0&#x27;, &#x27;row-hover&#x27;:&#x27;#EAF7EE&#x27;, destructive:&#x27;#EF4444&#x27;,
+    &#x27;muted-fg&#x27;:&#x27;#6B6B6E&#x27;, readonly:&#x27;#EEF1FA&#x27;, &#x27;light-green&#x27;:&#x27;#E6F8F0&#x27;, &#x27;row-hover&#x27;:&#x27;#EAF7EE&#x27;, destructive:&#x27;#F44336&#x27;,
     &#x27;danger-strong&#x27;:&#x27;#B91C1C&#x27;, &#x27;warn-bg&#x27;:&#x27;#FEF3C7&#x27;, &#x27;warn-fg&#x27;:&#x27;#78350F&#x27;, pending:&#x27;#FCD34D&#x27;, star:&#x27;#F5B301&#x27; },
   borderRadius: { lg:&#x27;12.8px&#x27;, md:&#x27;10.8px&#x27;, sm:&#x27;8.8px&#x27; },
   fontFamily: { sans: [&#x27;&quot;Exo 2&quot;&#x27;,&#x27;system-ui&#x27;,&#x27;sans-serif&#x27;] }
@@ -2137,7 +2137,8 @@ theme: { extend: {
 <tr><td>Janelas modais de Sair, Recuperar senha e Gerar cópia</td><td>Sair direto, recuperação no lugar do formulário, cópia no painel da inclusão.</td></tr>
 <tr><td>Texto branco sobre #75C566 (hover e selecionado)</td><td>Hover com texto escuro; selecionado em verde claro; texto branco só sobre #01814E.</td></tr>
 <tr><td>Texto apagado #8A8A8D</td><td>#6B6B6E.</td></tr>
-<tr><td>Texto vermelho em #EF4444</td><td>#B91C1C.</td></tr>
+<tr><td>Vermelho base #EF4444</td><td>#F44336, o mesmo vermelho já usado nos portais (Colors.red do Flutter).</td></tr>
+<tr><td>Texto vermelho no vermelho base</td><td>#B91C1C.</td></tr>
 <tr><td>Aviso em #B45309 e tons laranja</td><td>Família âmbar: #FEF3C7, #78350F, #FCD34D.</td></tr>
 <tr><td>Célula de tabela em 13,5px</td><td>14px.</td></tr>
 </table></section><section class="ds-sec" id="contato"><h2>Contato</h2><p class="ds-lead">Dúvidas, casos não cobertos ou propostas de mudança.</p><p class="ds-p">Mantido por Diego Loureiro, Gerente de Inovação. <a href="mailto:diego.loureiro@coplan.srv.br">diego.loureiro@coplan.srv.br</a></p></section><footer class="ds-foot">Coplan Design System 2.1. Fonte da verdade: <a href="https://diegoloureiro84.github.io/prototipo-central/" target="_blank" rel="noopener">protótipo do novo Central</a>.</footer></main>

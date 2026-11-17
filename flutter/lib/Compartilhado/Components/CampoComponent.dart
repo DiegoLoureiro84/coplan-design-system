@@ -12,7 +12,7 @@ import 'package:central_web/Compartilhado/AppTheme.dart';
 /// Estados visuais:
 /// - normal: borda #E0E0E1
 /// - foco: borda e anel de 1px em #75C566
-/// - erro: borda e anel de 1px em #EF4444 + mensagem em #B91C1C
+/// - erro: borda e anel de 1px em #F44336 + mensagem em #B91C1C
 /// - válido: marca de confirmação verde escuro à direita
 class CampoComponent extends StatefulWidget {
   const CampoComponent({
