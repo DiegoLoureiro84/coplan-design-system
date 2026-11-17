@@ -1,0 +1,6 @@
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    # O padrão da Coplan usa PascalCase nos nomes de arquivo e pasta.
+    file_names: false

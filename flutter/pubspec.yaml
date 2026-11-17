@@ -1,0 +1,45 @@
+name: central_web
+description: Front do novo Central (Flutter web). Modelo da tela de login.
+# Mesmas versões dos portais web atuais (fornecedor, contribuinte, servidor).
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.8.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
+  get: ^4.7.2
+  shared_preferences: ^2.5.2
+  flutter_svg: ^2.0.10+1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+  fonts:
+    - family: Exo2
+      fonts:
+        - asset: assets/fonts/Exo2-400.ttf
+          weight: 400
+        - asset: assets/fonts/Exo2-500.ttf
+          weight: 500
+        - asset: assets/fonts/Exo2-600.ttf
+          weight: 600
+        - asset: assets/fonts/Exo2-700.ttf
+          weight: 700
+        - asset: assets/fonts/Exo2-800.ttf
+          weight: 800
+    - family: Lucide
+      fonts:
+        - asset: assets/fonts/Lucide.ttf
