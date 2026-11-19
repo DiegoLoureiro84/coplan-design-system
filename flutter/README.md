@@ -80,4 +80,4 @@ Para testar a tela, use o CPF `529.982.247-25` e qualquer senha com 4 ou mais ca
 - Certificado digital e gov.br só mostram o aviso de redirecionamento, como no protótipo.
 - O brasão vem de `Municipio.brasaoUrl`. Sem URL, usa o brasão de exemplo dos assets.
 - "Recuperar senha" é inline, porque o Design System não usa janela modal (o protótipo foi corrigido da mesma forma).
-- Cores conforme o Design System 2.1: todo texto com contraste mínimo de 4,5:1. Hover em verde `#75C566` com texto escuro, texto branco sobre verde só em `#01814E`, texto vermelho em `#B91C1C`.
+- Cores conforme o Design System 2.1: todo texto com contraste mínimo de 4,5:1. Verde `#75C566` (hover, toast de sucesso, preenchimentos) sempre com texto escuro; texto vermelho em `#B91C1C`.

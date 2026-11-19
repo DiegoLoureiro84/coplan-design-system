@@ -28,7 +28,7 @@ Os componentes da página são os componentes reais do protótipo, renderizados 
 4. Pílulas de classificação são cinza neutro. Só status tem cor.
 5. Dentro dos sistemas não há título nem subtítulo de página, apenas breadcrumb.
 6. Menu lateral aberto sem ícones e com um único estilo de texto (15px, peso 400).
-7. Selecionado: verde claro `#E6F8F0` com texto escuro. Hover, botões e preenchimentos verdes: `#75C566` com texto escuro `#0A1A2E`; ícone sozinho em círculo verde fica branco. Verde escuro `#01814E` só no toast de sucesso.
+7. Selecionado: verde claro `#E6F8F0` com texto escuro. Hover, botões e preenchimentos verdes: `#75C566` com texto escuro `#0A1A2E`; ícone sozinho em círculo verde fica branco. Toast de sucesso também em `#75C566` com texto escuro; verde escuro `#01814E` só na marca.
 8. Todo seletor usa o seletor padrão; acima de 7 opções, com busca.
 9. "Limpar filtro" é sempre o mesmo botão, no fim da linha de filtros, visível só com filtro ativo.
 10. Dados exibidos exatamente como estão no cadastro do Central.

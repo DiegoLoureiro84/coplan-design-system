@@ -10,7 +10,7 @@ class AppColors {
   static const primaryHover = Color(0xFF1A3E7D); // primary com brilho 0.85, igual ao hover do protótipo
 
   /// Verde de destaque: hover e seleção, sempre com texto [foreground] (8,3:1).
-  /// Texto branco sobre verde só em [darkGreen] (4,9:1).
+  /// O verde escuro [darkGreen] fica só na marca (degradê do login).
   static const accent = Color(0xFF75C566);
   static const darkGreen = Color(0xFF01814E);
   static const navy = Color(0xFF032861);

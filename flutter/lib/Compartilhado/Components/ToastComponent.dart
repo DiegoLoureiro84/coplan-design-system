@@ -79,10 +79,11 @@ class _Toast extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (cor, icone) = switch (tipo) {
-      ToastType.success => (AppColors.darkGreen, AppIcons.circleCheck),
-      ToastType.error => (AppColors.destructiveStrong, AppIcons.circleAlert),
-      ToastType.info => (AppColors.primary, AppIcons.info),
+    // Sucesso no verde padrão com texto escuro (8,3:1); erro e info com texto branco.
+    final (cor, icone, texto) = switch (tipo) {
+      ToastType.success => (AppColors.accent, AppIcons.circleCheck, AppColors.foreground),
+      ToastType.error => (AppColors.destructiveStrong, AppIcons.circleAlert, Colors.white),
+      ToastType.info => (AppColors.primary, AppIcons.info, Colors.white),
     };
 
     return Material(
@@ -101,7 +102,7 @@ class _Toast extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 2),
-              child: Icon(icone, size: 24, color: Colors.white),
+              child: Icon(icone, size: 24, color: texto),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -109,17 +110,16 @@ class _Toast extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(titulo,
-                      style: const TextStyle(
-                          fontFamily: AppText.family, fontSize: 24, fontWeight: FontWeight.w700, color: Colors.white)),
+                      style: TextStyle(
+                          fontFamily: AppText.family, fontSize: 24, fontWeight: FontWeight.w700, color: texto)),
                   const SizedBox(height: 2),
-                  Text(mensagem,
-                      style: const TextStyle(fontFamily: AppText.family, fontSize: 16, color: Colors.white)),
+                  Text(mensagem, style: TextStyle(fontFamily: AppText.family, fontSize: 16, color: texto)),
                 ],
               ),
             ),
             InkWell(
               onTap: onFechar,
-              child: const Icon(AppIcons.x, size: 18, color: Color(0xD9FFFFFF)),
+              child: Icon(AppIcons.x, size: 18, color: texto),
             ),
           ],
         ),
